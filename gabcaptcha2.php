@@ -4,15 +4,13 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Efficient and simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.1
+Version: 1.0.2
 Author URI: http://www.gabsoftware.com
 */
 
 register_activation_hook(__FILE__, 'gabcaptcha2_install');
 
-//add_action('preprocess_comment', "gabcaptcha2_preprocess_comment", 1);
 add_action('wp_insert_comment', "gabcaptcha2_insert_comment", 10, 2 );
-//add_action('comment_post', "gabcaptcha2_comment_post");
 add_action('comment_form', "gabcaptcha2_init");
 add_action('admin_menu', 'gabcaptcha2_add_menu');
 add_action('wp_head', 'gabcaptcha2_head');
