@@ -4,7 +4,7 @@ Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
 Tested up to: 3.1.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 
 Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
 
@@ -59,6 +59,11 @@ Yes. Go to the 'Settings > Gab Captcha 2' menu in your Wordpress administration 
 
 == Changelog ==
 
+= 1.0.3 =
+* Added choice for 3 methods of generation: Standard (most compatible but average security), CSS (improved security, compatible with CSS-capable browsers), and CSS 3 (better security but only compatible with CSS3-compliant browsers)
+* Corrected a bug in CSS 3 method: the indices of :nth-child() were not shifted, leading to the CSS 3 method to be unusable previously
+* Corrected some translations
+
 = 1.0.2 =
 * Corrected captcha random generation issue
 * Improved performance a little.
@@ -69,6 +74,9 @@ Yes. Go to the 'Settings > Gab Captcha 2' menu in your Wordpress administration 
 * Initial public version
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+Extract new files and overwrite old ones. If you chose 'CSS 3 only->yes' in the previous version, you have to choose it again now.
 
 = 1.0.2 =
 Just overwrite older files with the new ones

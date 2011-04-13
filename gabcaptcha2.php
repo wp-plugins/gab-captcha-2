@@ -4,7 +4,7 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Efficient and simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.2
+Version: 1.0.3
 Author URI: http://www.gabsoftware.com
 */
 
@@ -21,21 +21,22 @@ add_option('gc_captcha_text', 'Prove that you are Human by typing the emphasized
 add_option('gc_captcha_length', 16, '', 'yes');
 add_option('gc_captcha_to_pick', 4, '', 'yes');
 add_option('gc_automatically_approve', 'no', '', 'yes');
-add_option('gc_css_only', 'no', '', 'yes');
+add_option('gc_method', 'std', '', 'yes');
 
 
 $langs = array(
 	'1'=>array(
 	'title' => 'English',
-	'pref_title' => 'Gab Captcha settings',
+	'pref_title' => 'Gab Captcha 2 settings',
 	'pref_descr' => 'Now you can laugh at the bots!',
 	'pref_lang' => 'Select language:',
 	'pref_captcha_text_desc' => 'Captcha label',
 	'pref_captcha_text_legend' => 'Captcha options',
 	'pref_captcha_text_length' => 'Captcha length (2 to 64):',
-	'pref_captcha_text_topick' => 'Captcha to pick (1 to 24):',
+	'pref_captcha_text_topick' => 'Solution length (1 to 24):',
 	'pref_automatically_approve_text' => 'Automatically approve comments who passed the test:',
-	'pref_css_only_text' => 'Use CSS 3 to display Captcha (improves security, but reduce compatibility to CSS3-compliant browsers):',
+	'pref_method_text' => 'Choose the method to generate the Captcha:<ul><li>Standard: medium security, high compatibility</li><li>CSS: improved security, compatible with CSS-capable browsers</li><li>CSS 3: better security, but reduce compatibility to CSS3-compliant browsers</li></ul>',
+	'pref_method_standard' => 'Standard',
 	'pref_yes' => 'yes',
 	'pref_no' => 'no',
 	'pref_show_credit' => 'Display credits :',
@@ -63,7 +64,8 @@ $langs = array(
 	'pref_captcha_text_length' => 'Longueur du captcha (entre 2 et 64)&nbsp;:',
 	'pref_captcha_text_topick' => 'Longueur de la solution (entre 1 et 24)&nbsp;:',
 	'pref_automatically_approve_text' => 'Approuver automatiquement les commentaires ayants passé le test&nbsp;:',
-	'pref_css_only_text' => 'Utiliser le CSS 3 pour afficher le Captcha (améliore la sécurité, mais restreint la compatibilité aux navigateurs gérant le CSS 3)&nbsp;:',
+	'pref_method_text' => 'Choisissez la méthode de génération du Captcha&nbsp;:<ul><li>Standard&nbsp;: sécurité moyenne, compatibilité élevée</li><li>CSS&nbsp;: sécurité accrue, compatibilité avec navigateurs gérant le CSS</li><li>CSS 3&nbsp;: Meilleure sécurité mais restreint la compatibilité aux navigateurs supportant le CSS 3 uniquement</li></ul>',
+	'pref_method_standard' => 'Standard',
 	'pref_yes' => 'oui',
 	'pref_no' => 'non',
 	'pref_show_credit' => 'Afficher les crédits&nbsp;:',
@@ -92,6 +94,7 @@ $validkeys = gabcaptcha2_pickvalid($captcha, $captchatopick);
 $validanswer = gabcaptcha2_getanswer($captcha, $validkeys);
 $gabcaptchaoutput = gabcaptcha2_display($captcha, $validkeys);
 $gabcaptchaoutput2 = gabcaptcha2_display2($captcha, $validkeys);
+$gabcaptchaoutput3 = gabcaptcha2_display3($captcha, $validkeys);
 $keylist64 = gabcaptcha2_keylist($captcha, $validkeys);
 $failedturing = false;
 $inserted = FALSE;
@@ -177,6 +180,16 @@ function gabcaptcha2_display($captcha, $validkeys)
 }
 
 function gabcaptcha2_display2($captcha, $validkeys)
+{
+	$res = "";
+	for ($i=0; $i<strlen($captcha); $i++)
+	{
+		$res .= "<span class=\"gc2_{$i}\">{$captcha[$i]}</span>";
+	}
+	return $res;
+}
+
+function gabcaptcha2_display3($captcha, $validkeys)
 {
 	$res = "";
 	for ($i=0; $i<strlen($captcha); $i++)
@@ -308,9 +321,9 @@ function gabcaptcha2_options_page() {
 			update_option('gc_automatically_approve', $_POST['gc_automatically_approve']);
 		}
 
-		if ($_POST['gc_css_only'] == "yes" || $_POST['gc_css_only'] == "no")
+		if ($_POST['gc_method'] == "std" || $_POST['gc_method'] == "css" || $_POST['gc_method'] == "css3")
 		{
-			update_option('gc_css_only', $_POST['gc_css_only']);
+			update_option('gc_method', $_POST['gc_method']);
 		}
 
 		update_option('gc_lang', escapestringjs($_POST['gc_lang']));
@@ -334,7 +347,7 @@ function gabcaptcha2_options_page() {
 			$gc_captcha_length = get_option('gc_captcha_length');
 			$gc_captcha_to_pick = get_option('gc_captcha_to_pick');
 			$gc_automatically_approve = get_option('gc_automatically_approve');
-			$gc_css_only = get_option('gc_css_only');
+			$gc_method = get_option('gc_method');
 			?>
 			<p>
 				<label for="gc_lang"><?php echo $texts['pref_lang']; ?></label>
@@ -375,11 +388,12 @@ function gabcaptcha2_options_page() {
 					<option value="no"<?php echo $gc_automatically_approve=='no' ? ' selected' : ''; ?>><?php echo $texts['pref_no']; ?></option>
 				</select>
 
-				<br />
-				<label for="gc_css_only"><?php echo $texts['pref_css_only_text']; ?></label>
-				<select id="gc_css_only" name="gc_css_only" />
-					<option value="yes"<?php echo $gc_css_only=='yes' ? ' selected' : ''; ?>><?php echo $texts['pref_yes']; ?></option>
-					<option value="no"<?php echo $gc_css_only=='no' ? ' selected' : ''; ?>><?php echo $texts['pref_no']; ?></option>
+				<br /><br />
+				<label for="gc_method"><?php echo $texts['pref_method_text']; ?></label>
+				<select id="gc_method" name="gc_method" />
+					<option value="std"<?php echo $gc_method=='std' ? ' selected' : ''; ?>><?php echo $texts['pref_method_standard']; ?></option>
+					<option value="css"<?php echo $gc_method=='css' ? ' selected' : ''; ?>>CSS</option>
+					<option value="css3"<?php echo $gc_method=='css3' ? ' selected' : ''; ?>>CSS 3</option>
 				</select>
 
 			</fieldset>
@@ -411,17 +425,27 @@ function gabcaptcha2_head()
 
 ?>
 
-		<link rel="stylesheet" href="<?php echo $gabcaptcha_css; ?>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $gabcaptcha_css; ?>" type="text/css" media="screen" />
 
 <?php
-	$gc_css_only = get_option('gc_css_only');
-	if ($gc_css_only == 'yes')
+	$gc_method = get_option('gc_method');
+	if ($gc_method == 'css')
 	{
 
 		$gabcaptcha_css2 = $gabcaptcha_plugindir . '/emphasis.php?set=' . $keylist64;
 ?>
 
-		<link rel="stylesheet" href="<?php echo $gabcaptcha_css2; ?>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $gabcaptcha_css2; ?>" type="text/css" media="screen" />
+
+<?php
+	}
+	else if ($gc_method == 'css3')
+	{
+
+		$gabcaptcha_css3 = $gabcaptcha_plugindir . '/emphasis.php?method=css3&amp;set=' . $keylist64;
+?>
+
+<link rel="stylesheet" href="<?php echo $gabcaptcha_css3; ?>" type="text/css" media="screen" />
 
 <?php
 	}
@@ -498,16 +522,21 @@ function gabcaptcha2_init($id)
 	global $validanswer;
 	global $gabcaptchaoutput;
 	global $gabcaptchaoutput2;
+	global $gabcaptchaoutput3;
 
 	if ($user_ID)
 	{
 		return $id;
 	}
 
-	$gc_css_only = get_option('gc_css_only');
-	if ($gc_css_only == 'yes')
+	$gc_method = get_option('gc_method');
+	if ($gc_method == 'css')
 	{
 		$gc_final_output = $gabcaptchaoutput2;
+	}
+	else if ($gc_method == 'css3')
+	{
+		$gc_final_output = $gabcaptchaoutput3;
 	}
 	else
 	{
