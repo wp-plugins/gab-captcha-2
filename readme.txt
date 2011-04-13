@@ -4,7 +4,7 @@ Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
 Tested up to: 3.1.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 
 Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
 
@@ -52,12 +52,27 @@ Definitely not. But it stopped all my spam as of today (getting about 100 spams 
 
 Yes. Go to the 'Settings > Gab Captcha 2' menu in your Wordpress administration area.
 
+= Why Gab Captcha 2 is not translated in my language? =
+
+Most probably because nobody submitted a translation for your language yet. But you can help:
+1. Copy and paste the file "lang/default.po" and rename it to "lang/gabcaptcha2-code" where "code" is your language code (eg, it is "fr" for French)
+2. Use Poedit or any other tool able to handle .po and .mo files
+3. Then send me your translated file.
+Note: do not edit .po files by hand. Use an appropriate tool.
+
 == Screenshots ==
 
 1. Gab Captcha 2 settings in Wordpress administration area
 2. Gab Captcha 2 before the comment text area
 
 == Changelog ==
+
+= 1.0.4 =
+* Use a class now
+* Use the standard Wordpress translation system using .po and .mo files. You can contribute your translation using Poedit.
+* Use the recommended way to insert CSS in Wordpress
+* Function reorganisation
+* Code cleaning
 
 = 1.0.3 =
 * Added choice for 3 methods of generation: Standard (most compatible but average security), CSS (improved security, compatible with CSS-capable browsers), and CSS 3 (better security but only compatible with CSS3-compliant browsers)
