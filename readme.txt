@@ -4,43 +4,79 @@ Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
 Tested up to: 3.1.1
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 
 Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
 
 == Description ==
 
+<p>
 Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
+</p>
 
+<p>
 It adds an easy turing test before each comment form. The turing test consist in typing the characters that appear emphasized and red in a text field. The plugin will add an entry in your Wordpress administration area to let you configure some options.
+</p>
 
+<p>
 Gab Captcha 2 currently comes in two languages: English (default) and French. You are welcome to propose your own translation or to update existing ones, especially the English one as I am not a native English speaker.
+</p>
 
+<p>
 Important notes:
-1. This plugin requires Javascript to be able to post a comment.
-2. This plugin puts spam comments in the "spam" folder and can automatically approve valid comments depending on your settings.
+</p>
+
+<ol>
+<li>This plugin requires Javascript to be able to post a comment</li>
+<li>This plugin can automatically approve valid comments depending on your settings</li>
+<li>This plugin requires PHP 5</li>
+</ol>
 
 == Installation ==
 
+<p>
 This section describes how to install the plugin and get it working.
+</p>
 
-1. Extract and upload the directory "gabcaptcha2" and all its content to your '/wp-content/plugins/' directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
+<ol>
+<li>Extract and upload the directory "gabcaptcha2" and all its content to your '/wp-content/plugins/' directory</li>
+<li>Activate the plugin through the 'Plugins' menu in WordPress</li>
+</ol>
 
+<p>
 Optional but recommended :
-3. Change the options to fit your needs in the 'Settings > Gab Captcha 2' menu in your Wordpress administration area
-4. If you don't want to receive an email after each spam has been catches:
-4.1. Go to the 'Settings > Discussion' menu
-4.1.1. Tick the following checkboxes:
-       "E-mail me whenever > Anyone posts a comment"
-       "Before a comment appears > An administrator must always approve the comment"
-       "Before a comment appears > Comment author must have a previously approved comment"
-4.1.2. Uncheck the following checkbox:
-       "E-mail me whenever > A comment is held for moderation"
-4.2. Go to the 'Settings > Gab Captcha 2' menu
-4.2.1 Choose 'yes' for 'Automatically approve comments who passed the test'
+</p>
 
+<ol>
+<li>Change the options to fit your needs in the 'Settings > Gab Captcha 2' menu in your Wordpress administration area</li>
+<li>If you don't want to receive an email after each spam has been catches:
+	<ol>
+	<li>4.1. Go to the 'Settings > Discussion' menu
+		<ol>
+		<li>Tick the following checkboxes:
+			<ul>
+			<li>"E-mail me whenever > Anyone posts a comment"</li>
+			<li>"Before a comment appears > An administrator must always approve the comment"</li>
+			<li>"Before a comment appears > Comment author must have a previously approved comment"</li>
+		</li>
+		<li>Uncheck the following checkbox:
+			<ul>
+			<li>"E-mail me whenever > A comment is held for moderation"</li>
+			</ul>
+		</li>
+		</ol>
+	</li>
+	<li>Go to the 'Settings > Gab Captcha 2' menu
+		<ol>
+		<li>Choose 'yes' for 'Automatically approve comments who passed the test'</li>
+		</ol>
+	</li>
+</li>
+</ol>
+
+<p>
 You will now receive an email only after a valid comment has been posted.
+</p>
 
 == Frequently Asked Questions ==
 
@@ -66,6 +102,9 @@ Note: do not edit .po files by hand. Use an appropriate tool.
 2. Gab Captcha 2 before the comment text area
 
 == Changelog ==
+
+= 1.0.5 =
+* Fixed the appearance of message "Dupplicate comment detected" after retrying to post a comment with a valid solution.
 
 = 1.0.4 =
 * Use a class now

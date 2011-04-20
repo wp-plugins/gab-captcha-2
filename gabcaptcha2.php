@@ -4,7 +4,7 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Efficient and simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.4
+Version: 1.0.5
 Author URI: http://www.gabsoftware.com
 Tags: comments, spam, captcha, turing, test
 */
@@ -552,7 +552,7 @@ class GabCaptcha2
 		if ($this->failedturing == true)
 		{
 
-			wp_set_comment_status( $id, "spam" );
+			//wp_set_comment_status( $id, "spam" );
 
 			// use a file as marker for later use
 			$failedfile = $gabcaptcha2_plugin_dir . "/failed.txt";
@@ -560,6 +560,9 @@ class GabCaptcha2
 			$stringData = $_SESSION['gabcaptcha2_session'] . "-<(SEPARATOR)>-" . $_POST['comment'];
 			fwrite($fh, $stringData);
 			fclose($fh);
+
+			//delete the comment to avoid a "you already said that" message.
+			wp_delete_comment( $id );
 
 		}
 		else
