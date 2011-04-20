@@ -71,6 +71,7 @@ Optional but recommended :
 		<li>Choose 'yes' for 'Automatically approve comments who passed the test'</li>
 		</ol>
 	</li>
+	</ol>
 </li>
 </ol>
 
