@@ -48,31 +48,32 @@ Optional but recommended :
 </p>
 
 <ol>
-<li>Change the options to fit your needs in the 'Settings > Gab Captcha 2' menu in your Wordpress administration area</li>
-<li>If you don't want to receive an email after each spam has been catches:
-	<ol>
-	<li>Go to the 'Settings > Discussion' menu
+	<li>Change the options to fit your needs in the 'Settings > Gab Captcha 2' menu in your Wordpress administration area</li>
+	<li>If you don't want to receive an email after each spam has been catched:
 		<ol>
-		<li>Tick the following checkboxes:
-			<ul>
-			<li>"E-mail me whenever > Anyone posts a comment"</li>
-			<li>"Before a comment appears > An administrator must always approve the comment"</li>
-			<li>"Before a comment appears > Comment author must have a previously approved comment"</li>
-		</li>
-		<li>Uncheck the following checkbox:
-			<ul>
-			<li>"E-mail me whenever > A comment is held for moderation"</li>
-			</ul>
-		</li>
+			<li>Go to the 'Settings > Discussion' menu
+				<ol>
+					<li>Tick the following checkboxes:
+						<ul>
+							<li>"E-mail me whenever > Anyone posts a comment"</li>
+							<li>"Before a comment appears > An administrator must always approve the comment"</li>
+							<li>"Before a comment appears > Comment author must have a previously approved comment"</li>
+						</ul>
+					</li>
+					<li>Uncheck the following checkbox:
+						<ul>
+							<li>"E-mail me whenever > A comment is held for moderation"</li>
+						</ul>
+					</li>
+				</ol>
+			</li>
+			<li>Go to the 'Settings > Gab Captcha 2' menu
+				<ol>
+					<li>Choose 'yes' for 'Automatically approve comments who passed the test'</li>
+				</ol>
+			</li>
 		</ol>
 	</li>
-	<li>Go to the 'Settings > Gab Captcha 2' menu
-		<ol>
-		<li>Choose 'yes' for 'Automatically approve comments who passed the test'</li>
-		</ol>
-	</li>
-	</ol>
-</li>
 </ol>
 
 <p>
