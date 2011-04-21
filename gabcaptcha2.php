@@ -4,7 +4,7 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Efficient and simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.5
+Version: 1.0.6
 Author URI: http://www.gabsoftware.com
 Tags: comments, spam, captcha, turing, test
 */
@@ -70,6 +70,11 @@ if (!isset($_SESSION['gabcaptcha2_id']) or !isset($_SESSION['gabcaptcha2_session
 	$_SESSION['gabcaptcha2_session'] = str_rand();
 }
 
+if (!isset($_SESSION['gabcaptcha2_comment_status']))
+{
+	$_SESSION['gabcaptcha2_comment_status'] = "normal";
+}
+
 
 
 
@@ -120,7 +125,7 @@ class GabCaptcha2
 		$this->gabcaptchaoutput2 = $this->gabcaptcha2_display2($this->captcha, $this->validkeys);
 		$this->gabcaptchaoutput3 = $this->gabcaptcha2_display3($this->captcha, $this->validkeys);
 		$this->keylist64         = $this->gabcaptcha2_keylist($this->captcha, $this->validkeys);
-		$this->failedturing      = false;
+		$this->failedturing      = true;
 		$this->inserted          = FALSE;
 
 
@@ -132,6 +137,11 @@ class GabCaptcha2
 		add_action('comment_form',      array( &$this, 'gabcaptcha2_comment_form') );
 		add_action('admin_menu',        array( &$this, 'gabcaptcha2_add_menu') );
 		add_action('wp_print_styles',   array( &$this, 'gabcaptcha2_add_stylesheet') );
+		//add_action('comment_duplicate_trigger',   array( &$this, 'gabcaptcha2_comment_duplicate_trigger'), 10, 1 );
+		//add_action('check_comment_flood',   array( &$this, 'gabcaptcha2_check_comment_flood'), 10, 3 );
+		add_action('preprocess_comment',   array( &$this, 'gabcaptcha2_preprocess_comment'), 10, 1 );
+		//add_action('wp_allow_comment',   array( &$this, 'gabcaptcha2_wp_allow_comment'), 10, 1 );
+
 
 		//add_option('gc_lang', '1', '', 'yes');
 		add_option('gc_show_credit',           '1', '', 'yes');
@@ -311,45 +321,7 @@ class GabCaptcha2
 		return base64_encode($res);
 	} //function
 
-	function gabcaptcha2_check()
-	{
-		global $wpdb;
 
-		if( !empty($_POST) )
-		{
-			// was there a GabCaptcha response ?
-			if ($_POST["CommentTuring"] && $_POST["CommentSecret"])
-			{
-				if (md5(strtoupper($_POST["CommentTuring"])) == base64_decode($_POST["CommentSecret"]))
-				{
-					$secret = base64_decode($_POST["CommentSecret"]);
-
-					$table_name = $wpdb->prefix . "gabcaptchasecret";
-					$reqcnt = $wpdb->prepare("SELECT COUNT(SECRET) AS NB FROM %s WHERE SECRET='%s'", $table_name, $secret);
-					$numrows = 0;
-					$cntrow = $wpdb->get_row($reqcnt);
-					$numrows = $cntrow->NB;
-
-					//s'il y a 0 résultat, on peut ajouter le notre
-					if ($numrows == 0)
-					{
-						$this->inserted = $wpdb->insert( $table_name, array('secret' => $secret));
-					}
-				}
-				else
-				{
-					// Failed... Sorry
-					$this->failedturing = true;
-				}
-			}
-			else
-			{
-				// Failed... Sorry
-				$this->failedturing = true;
-			}
-		}
-		return $this->failedturing;
-	} //function
 
 
 
@@ -535,6 +507,107 @@ class GabCaptcha2
 
 
 
+	function gabcaptcha2_check()
+	{
+		global $wpdb;
+
+		if( !empty($_POST) )
+		{
+			// was there a GabCaptcha response ?
+			if ($_POST["CommentTuring"] && $_POST["CommentSecret"])
+			{
+				if (md5(strtoupper($_POST["CommentTuring"])) == base64_decode($_POST["CommentSecret"]))
+				{
+					$secret = base64_decode($_POST["CommentSecret"]);
+
+					$table_name = $wpdb->prefix . "gabcaptchasecret";
+					$reqcnt = $wpdb->prepare("SELECT COUNT(SECRET) AS NB FROM %s WHERE SECRET='%s'", $table_name, $secret);
+					$numrows = 0;
+					$cntrow = $wpdb->get_row($reqcnt);
+					$numrows = $cntrow->NB;
+
+					//s'il y a 0 résultat, on peut ajouter le notre
+					if ($numrows == 0)
+					{
+						$this->inserted = $wpdb->insert( $table_name, array('secret' => $secret));
+						$this->failedturing = false;
+					}
+					else
+					{
+						$this->failedturing = true;
+					}
+				}
+				else
+				{
+					// Failed... Sorry
+					$this->failedturing = true;
+				}
+			}
+			else
+			{
+				// Failed... Sorry
+				$this->failedturing = true;
+			}
+		}
+
+		if ($this->failedturing == true)
+		{
+			$_SESSION['gabcaptcha2_comment_status'] = "failed";
+		}
+		else
+		{
+			$_SESSION['gabcaptcha2_comment_status'] = "passed";
+		}
+
+		return $this->failedturing;
+	} //function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function gabcaptcha2_preprocess_comment( $commentdata )
+	{
+		//check if a valid solution was given
+		$this->gabcaptcha2_check();
+
+		if ($_SESSION['gabcaptcha2_comment_status'] == "passed")
+		{
+			//remove the flood check if a valid solution has been provided
+			remove_filter('check_comment_flood', 'check_comment_flood_db');
+			remove_filter('comment_flood_filter', 'wp_throttle_comment_flood');
+		}
+
+		return $commentdata;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	function gabcaptcha2_insert_comment( $id, $comment )
@@ -547,9 +620,9 @@ class GabCaptcha2
 			return $id;
 		}
 
-		$this->gabcaptcha2_check();
+		//$this->gabcaptcha2_check();
 
-		if ($this->failedturing == true)
+		if ($_SESSION['gabcaptcha2_comment_status'] == "failed")
 		{
 
 			//wp_set_comment_status( $id, "spam" );
@@ -572,6 +645,9 @@ class GabCaptcha2
 				wp_set_comment_status( $id, "approve" );
 			}
 		}
+
+
+
 	} //function
 
 
@@ -585,6 +661,8 @@ class GabCaptcha2
 		{
 			return $id;
 		}
+
+		//$_SESSION['gabcaptcha2_comment_status'] = "normal";
 
 		$gc_method = get_option('gc_method');
 		if ($gc_method == 'css')
