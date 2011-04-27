@@ -4,7 +4,7 @@ Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
 Tested up to: 3.1.1
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 
 Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
 
@@ -104,6 +104,9 @@ Note: do not edit .po files by hand. Use an appropriate tool.
 2. Gab Captcha 2 before the comment text area
 
 == Changelog ==
+
+= 1.0.7 =
+* After an invalid solution is provided, automatically scrolls to the comment area so that the user knows he failed.
 
 = 1.0.6 =
 * Fixed the appearance of message "You are posting too quickly. Slow down!" when a valid solution has been provided.
