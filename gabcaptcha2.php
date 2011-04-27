@@ -4,7 +4,7 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Efficient and simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.7
+Version: 1.0.8
 Author URI: http://www.gabsoftware.com
 Tags: comments, spam, captcha, turing, test
 */
@@ -12,7 +12,7 @@ Tags: comments, spam, captcha, turing, test
 /* global variables */
 $gabcaptcha2_plugin_dir = WP_PLUGIN_DIR .'/' .plugin_basename(dirname(__FILE__));
 $gabcaptcha2_plugin_url = WP_PLUGIN_URL .'/' .plugin_basename(dirname(__FILE__));
-
+$gabcaptcha2_version = "1.0.8";
 
 
 
@@ -656,6 +656,7 @@ class GabCaptcha2
 	{
 		global $user_ID;
 		global $gabcaptcha2_plugin_dir;
+		global $gabcaptcha2_version;
 
 		if ($user_ID)
 		{
@@ -713,8 +714,8 @@ class GabCaptcha2
 
 		var submitp = commentField.parentNode;
 		var answerDiv = document.getElementById("<?php echo $_SESSION['gabcaptcha2_id']; ?>");
-		answerDiv.innerHTML = '<legend>Anti-spam</legend>'
-		+ '<!-- Turing test -->'
+		answerDiv.innerHTML = '<legend><?php escapestringjs(__("Anti-spam")); ?></legend>'
+		+ '<!-- Turing test using Gab Captcha 2 v<?php echo $gabcaptcha2_version; ?> (http://www.gabsoftware.com/products/scripts/gabcaptcha2/) -->'
 		+ '<p><?php echo escapestringjs($gc_captcha_text); ?></p>'
 		+ '<label for="commentturing"><?php echo $gc_final_output; ?></label>'
 		+ '<input type="text" id="commentturing" name="CommentTuring" maxlength="4" class="textField" /><br />'
@@ -722,10 +723,10 @@ class GabCaptcha2
 		+ '<?php if ($failedprevious && $failedcommentdata != "" ): ?>'
 		+ '<p class="gabcaptchaer"><?php echo escapestringjs(__("You failed the test. Try again!")); ?></p>'
 		+ '<?php endif; ?>'
-		+ '<?php if($show_credit==1):?><br />'
-		+ '<a class="gabcaptchalc" href="<?php _e("http://www.gabsoftware.com/products/scripts/gabcaptcha2/"); ?>"><?php echo escapestringjs(__("Gab Captcha 2 &copy; Gabriel Hautclocq")); ?></a>'
-		+ '<?php elseif ($show_credit==2):?><br />'
-		+ '<span class="gabcaptchalc"><?php echo escapestringjs(__("Protected by <strong>Gab Captcha 2</strong>")); ?></span>'
+		+ '<?php if($show_credit == 1):?><br />'
+		+ '<a class="gabcaptchalc" title="<?php echo escapestringjs(sprintf(__("Gab Captcha 2 v%s"), $gabcaptcha2_version)); ?>" href="<?php _e("http://www.gabsoftware.com/products/scripts/gabcaptcha2/"); ?>"><?php echo escapestringjs(__("Gab Captcha 2 &copy; GabSoftware")); ?></a>'
+		+ '<?php elseif ($show_credit == 2):?><br />'
+		+ '<span class="gabcaptchalc" title="<?php echo escapestringjs(sprintf(__("Gab Captcha 2 v%s"), $gabcaptcha2_version)); ?>"><?php echo escapestringjs(__("Protected by <strong>Gab Captcha 2</strong>")); ?></span>'
 		+ '<?php endif;?>';
 		submitp.appendChild(answerDiv, commentField);
 		<?php
