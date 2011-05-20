@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gabcaptcha2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-13 22:50+0800\n"
+"POT-Creation-Date: 2011-04-27 16:27+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Gabriel Hautclocq <gabriel@gabsoftware.com>\n"
 "Language-Team: GabSoftware <gabriel@gabsoftware.com>\n"
@@ -16,125 +16,135 @@ msgstr ""
 "X-Poedit-Basepath: /home/gabriel/web/gabcaptcha2\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: gabcaptcha2.php:141
-#: gabcaptcha2.php:441
+#: gabcaptcha2.php:148
+#: gabcaptcha2.php:397
 msgid "Prove that you are Human by typing the emphasized characters:"
 msgstr ""
 
-#: gabcaptcha2.php:411
+#: gabcaptcha2.php:367
 msgid "Settings was successfully updated!"
 msgstr ""
 
-#: gabcaptcha2.php:415
+#: gabcaptcha2.php:371
 msgid "Gab Captcha 2 settings"
 msgstr ""
 
-#: gabcaptcha2.php:416
+#: gabcaptcha2.php:372
 msgid "Now you can laugh at the bots!"
 msgstr ""
 
-#: gabcaptcha2.php:431
+#: gabcaptcha2.php:387
 msgid "Display credits:"
 msgstr ""
 
-#: gabcaptcha2.php:433
+#: gabcaptcha2.php:389
 msgid "As link"
 msgstr ""
 
-#: gabcaptcha2.php:434
+#: gabcaptcha2.php:390
 msgid "As plain text"
 msgstr ""
 
-#: gabcaptcha2.php:435
+#: gabcaptcha2.php:391
 msgid "Off"
 msgstr ""
 
-#: gabcaptcha2.php:440
+#: gabcaptcha2.php:396
 msgid "Captcha label"
 msgstr ""
 
-#: gabcaptcha2.php:445
+#: gabcaptcha2.php:401
 msgid "Captcha options"
 msgstr ""
 
-#: gabcaptcha2.php:447
-#: gabcaptcha2.php:448
+#: gabcaptcha2.php:403
+#: gabcaptcha2.php:404
 msgid "Captcha length (2 to 64):"
 msgstr ""
 
-#: gabcaptcha2.php:450
-#: gabcaptcha2.php:451
+#: gabcaptcha2.php:406
+#: gabcaptcha2.php:407
 msgid "Solution length (1 to 24):"
 msgstr ""
 
-#: gabcaptcha2.php:454
+#: gabcaptcha2.php:410
 msgid "Automatically approve comments who passed the test:"
 msgstr ""
 
-#: gabcaptcha2.php:456
+#: gabcaptcha2.php:412
 msgid "Yes"
 msgstr ""
 
-#: gabcaptcha2.php:457
+#: gabcaptcha2.php:413
 msgid "No"
 msgstr ""
 
-#: gabcaptcha2.php:462
+#: gabcaptcha2.php:418
 msgid "Choose the method to generate the Captcha:"
 msgstr ""
 
-#: gabcaptcha2.php:464
+#: gabcaptcha2.php:420
 msgid "Standard: medium security, high compatibility"
 msgstr ""
 
-#: gabcaptcha2.php:465
+#: gabcaptcha2.php:421
 msgid "CSS: improved security, compatible with CSS-capable browsers"
 msgstr ""
 
-#: gabcaptcha2.php:466
+#: gabcaptcha2.php:422
 msgid "CSS 3: better security, but reduces compatibility to CSS3-compliant browsers"
 msgstr ""
 
-#: gabcaptcha2.php:470
+#: gabcaptcha2.php:426
 msgid "Standard"
 msgstr ""
 
-#: gabcaptcha2.php:478
+#: gabcaptcha2.php:434
 msgid "Apply"
 msgstr ""
 
-#: gabcaptcha2.php:483
+#: gabcaptcha2.php:439
 msgid "http://www.gabsoftware.com/"
 msgstr ""
 
-#: gabcaptcha2.php:483
+#: gabcaptcha2.php:439
 msgid "Gabriel Hautclocq"
 msgstr ""
 
-#: gabcaptcha2.php:510
-#: gabcaptcha2.php:525
-#: gabcaptcha2.php:539
+#: gabcaptcha2.php:465
+#: gabcaptcha2.php:479
+#: gabcaptcha2.php:492
 #, php-format
 msgid "%s does not exist"
 msgstr ""
 
-#: gabcaptcha2.php:651
+#: gabcaptcha2.php:705
 msgid "Our antispam protection requires that you enable JavaScript in your browser to be able to comment!"
 msgstr ""
 
-#: gabcaptcha2.php:670
+#: gabcaptcha2.php:717
+msgid "Anti-spam"
+msgstr ""
+
+#: gabcaptcha2.php:724
 msgid "You failed the test. Try again!"
 msgstr ""
 
-#: gabcaptcha2.php:673
+#: gabcaptcha2.php:727
+#: gabcaptcha2.php:729
+#, php-format
+msgid "Gab Captcha 2 v%s"
+msgstr ""
+
+#: gabcaptcha2.php:727
 msgid "http://www.gabsoftware.com/products/scripts/gabcaptcha2/"
 msgstr ""
 
-#: gabcaptcha2.php:673
-msgid "Gab Captcha 2 &copy; Gabriel Hautclocq"
+#: gabcaptcha2.php:727
+msgid "Gab Captcha 2 &copy; GabSoftware"
 msgstr ""
 
-#: gabcaptcha2.php:675
+#: gabcaptcha2.php:729
 msgid "Protected by <strong>Gab Captcha 2</strong>"
 msgstr ""
 
