@@ -106,7 +106,7 @@ Note: do not edit .po files by hand. Use an appropriate tool.
 == Changelog ==
 
 = 1.0.9 =
-* Russian translation added by Станислав (thanks!)
+* Russian translation added (thanks!)
 
 = 1.0.8 =
 * Fixed some translation issues
