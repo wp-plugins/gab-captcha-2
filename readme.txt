@@ -3,8 +3,8 @@ Contributors: GabSoftware
 Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
-Tested up to: 3.1.1
-Stable tag: 1.0.5
+Tested up to: 3.1.2
+Stable tag: 1.0.10
 
 Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
 
@@ -50,9 +50,9 @@ Optional but recommended :
 <ol>
 	<li>Change the options to fit your needs in the 'Settings > Gab Captcha 2' menu in your Wordpress administration area</li>
 	<li>If you don't want to receive an email after each spam has been catched:
-		<ol>
+		<ol style="list-style-type:upper-alpha">
 			<li>Go to the 'Settings > Discussion' menu
-				<ol>
+				<ol style="list-style-type:lower-alpha">
 					<li>Tick the following checkboxes:
 						<ul>
 							<li>"E-mail me whenever > Anyone posts a comment"</li>
@@ -105,8 +105,25 @@ Note: do not edit .po files by hand. Use an appropriate tool.
 
 == Changelog ==
 
+= 1.0.10 =
+* Bugs fixed
+
+= 1.0.9 =
+* Russian translation added (thanks!)
+
+= 1.0.8 =
+* Fixed some translation issues
+* Updated the Readme file
+
+= 1.0.7 =
+* After an invalid solution is provided, automatically scrolls to the comment area so that the user knows he failed.
+
+= 1.0.6 =
+* Fixed the appearance of message "You are posting too quickly. Slow down!" when a valid solution has been provided.
+
 = 1.0.5 =
 * Fixed the appearance of message "Dupplicate comment detected" after retrying to post a comment with a valid solution.
+* Comments are no longer moved to the spam folder.
 
 = 1.0.4 =
 * Use a class now
