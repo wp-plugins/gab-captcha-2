@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: gabcaptcha2\n"
+"Project-Id-Version: gabcaptcha2 1.0.12\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-05-20 21:02+0800\n"
 "PO-Revision-Date: \n"
@@ -14,6 +14,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: /home/gabriel/web/gabcaptcha2\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: gabcaptcha2.php:148

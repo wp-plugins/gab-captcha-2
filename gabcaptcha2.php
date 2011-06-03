@@ -4,16 +4,87 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Efficient and simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.11
+Version: 1.0.12
 Author URI: http://www.gabsoftware.com
 Tags: comments, spam, captcha, turing, test
 */
 
+
+//error_reporting(E_ALL);
+
+// security check
+if ( !defined( 'WP_PLUGIN_DIR') )
+{
+	die("There is nothing to see here.");
+}
+
+
 /* global variables */
 $gabcaptcha2_plugin_dir = WP_PLUGIN_DIR .'/' .plugin_basename(dirname(__FILE__));
 $gabcaptcha2_plugin_url = WP_PLUGIN_URL .'/' .plugin_basename(dirname(__FILE__));
-$gabcaptcha2_version = "1.0.11";
 
+$gabcaptcha2_version_maj = 1;
+$gabcaptcha2_version_min = 0;
+$gabcaptcha2_version_rev = 12;
+$gabcaptcha2_version = "{$gabcaptcha2_version_maj}.{$gabcaptcha2_version_min}.{$gabcaptcha2_version_rev}";
+
+
+// Returns the value of the specified option
+function gabcaptcha2_get_option($name)
+{
+	$options = get_option('gabcaptcha2_options');
+	if ( isset( $options[$name] ) )
+	{
+		return $options[$name];
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+
+// Sets the value of the specified option
+function gabcaptcha2_set_option($name, $value)
+{
+	$options = get_option('gabcaptcha2_options');
+	$options[$name] = $value;
+
+	return update_option('gabcaptcha2_options', $options );
+}
+
+//get all or part of the version of GabCaptcha2
+function gabcaptcha2_get_version($what = 'all')
+{
+	global $gabcaptcha2_version;
+
+	$version = get_option('gabcaptcha2_version');
+
+	if ( $version === FALSE || !isset($version) || empty($version) )
+	{
+		$version = '1.0.11';
+	}
+
+	switch( $what )
+	{
+		case 'all':
+			return $version;
+			break;
+		case 'major':
+			$version_array = explode('.', $version);
+			return $version_array[0];
+			break;
+		case 'minor':
+			$version_array = explode('.', $version);
+			return $version_array[1];
+			break;
+		case 'revision':
+			$version_array = explode('.', $version);
+			return $version_array[2];
+			break;
+		default:
+			return $version;
+	}
+}
 
 
 /*
@@ -22,13 +93,13 @@ $gabcaptcha2_version = "1.0.11";
 function gabcaptcha2_setlang()
 {
 	global $gabcaptcha2_plugin_dir;
-	load_plugin_textdomain( 'gabcaptcha2', $gabcaptcha2_plugin_dir . "/lang", plugin_basename(dirname(__FILE__)).'/lang' );
+	load_plugin_textdomain( 'gabcaptcha2', $gabcaptcha2_plugin_dir . "/lang", plugin_basename(dirname(__FILE__)) . '/lang' );
 }
 
 /*
  * Escape a string so that it can be used in Javascript code
  */
-function escapestringjs($str)
+function gabcaptcha2_escapestringjs($str)
 {
 	return strtr($str, array('\\'=>'\\\\',"'"=>"\\'",'"'=>'\\"',"\r"=>'\\r',"\n"=>'\\n','</'=>'<\/'));
 }
@@ -100,6 +171,7 @@ class GabCaptcha2
 	private $keylist64;
 	private $failedturing;
 	private $inserted;
+	private $gabcaptcha2_options;
 
 
 
@@ -110,14 +182,16 @@ class GabCaptcha2
 
 	function __construct()
 	{
-		# Place your add_actions and add_filters here
+		// Place your add_actions and add_filters here
 
 		gabcaptcha2_setlang();
 
 
 		$this->letters = Array ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
-		$this->captchalength     = get_option('gc_captcha_length');
-		$this->captchatopick     = get_option('gc_captcha_to_pick');
+		//$this->captchalength     = get_option('gc_captcha_length');
+		$this->captchalength     = gabcaptcha2_get_option( 'captcha_length' );
+		//$this->captchatopick     = get_option('gc_captcha_to_pick');
+		$this->captchatopick     = gabcaptcha2_get_option( 'captcha_solution_length' );
 		$this->captcha           = $this->gabcaptcha2_generate($this->letters, $this->captchalength);
 		$this->validkeys         = $this->gabcaptcha2_pickvalid($this->captcha, $this->captchatopick);
 		$this->validanswer       = $this->gabcaptcha2_getanswer($this->captcha, $this->validkeys);
@@ -129,50 +203,88 @@ class GabCaptcha2
 		$this->inserted          = FALSE;
 
 
-		register_activation_hook(__FILE__, array( &$this, 'gabcaptcha2_install') );
+		//register_activation_hook(__FILE__, array( &$this, 'gabcaptcha2_install_callback') );
+		$this->should_install();
 
-		add_action('admin_init',        array( &$this, 'admin_init') );
-		add_action('init',              array( &$this, 'init') );
-		add_action('wp_insert_comment', array( &$this, 'gabcaptcha2_insert_comment'), 10, 2 );
-		add_action('comment_form',      array( &$this, 'gabcaptcha2_comment_form') );
-		add_action('admin_menu',        array( &$this, 'gabcaptcha2_add_menu') );
-		add_action('wp_print_styles',   array( &$this, 'gabcaptcha2_add_stylesheet') );
-		//add_action('comment_duplicate_trigger',   array( &$this, 'gabcaptcha2_comment_duplicate_trigger'), 10, 1 );
-		//add_action('check_comment_flood',   array( &$this, 'gabcaptcha2_check_comment_flood'), 10, 3 );
+
+		if( is_admin() )
+		{
+			//include admin-related files
+			require_once("gabcaptcha2_admin.php");
+
+			$gabcaptcha2_options = new GabCaptcha2_Options();
+
+			//add_action('admin_init',        array( &$this, 'gabcaptcha2_admin_init_callback') );
+			//add_action('admin_menu',        array( &$this, 'gabcaptcha2_add_menu_callback') );
+		}
+
+
+		add_action('init',              array( &$this, 'gabcaptcha2_init_callback') );
+		add_action('wp_insert_comment', array( &$this, 'gabcaptcha2_insert_comment_callback'), 10, 2 );
+		add_action('comment_form',      array( &$this, 'gabcaptcha2_comment_form_callback') );
+
+		//add_action('wp_print_styles',   array( &$this, 'gabcaptcha2_add_stylesheet_callback') );
 		add_action('preprocess_comment',   array( &$this, 'gabcaptcha2_preprocess_comment'), 10, 1 );
-		//add_action('wp_allow_comment',   array( &$this, 'gabcaptcha2_wp_allow_comment'), 10, 1 );
 
-
-		//add_option('gc_lang', '1', '', 'yes');
+		/*
 		add_option('gc_show_credit',           '1', '', 'yes');
 		add_option('gc_captcha_text',          __('Prove that you are Human by typing the emphasized characters:', 'gabcaptcha2'), '', 'yes');
 		add_option('gc_captcha_length',        16, '', 'yes');
 		add_option('gc_captcha_to_pick',       4, '', 'yes');
 		add_option('gc_automatically_approve', 'no', '', 'yes');
 		add_option('gc_method',                'std', '', 'yes');
+		*/
 
 	} // function
 
-	function admin_init()
+
+	public function gabcaptcha2_init_callback()
 	{
-		# perform your code here
+		global $gabcaptcha2_plugin_dir;
+
+		if(function_exists('load_plugin_textdomain'))
+		{
+			load_plugin_textdomain( 'gabcaptcha2', $gabcaptcha2_plugin_dir, plugin_basename(dirname(__FILE__)));
+		}
+
+		add_action( 'wp_print_styles', array( &$this, 'gabcaptcha2_add_stylesheet_callback' ) );
+
 	} // function
 
-	function init()
+
+
+
+	//check is gabcaptcha2 should be installed or upgraded
+	function should_install()
 	{
-		# perform your code here
-	} // function
+		global $gabcaptcha2_version_maj;
+		global $gabcaptcha2_version_min;
+		global $gabcaptcha2_version_rev;
+
+		$majver = gabcaptcha2_get_version('major');
+		$minver = gabcaptcha2_get_version('minor');
+		$revver = gabcaptcha2_get_version('revision');
+
+
+		if ($majver != $gabcaptcha2_version_maj || $minver != $gabcaptcha2_version_min || $revver != $gabcaptcha2_version_rev)
+		{
+			$this->install( $gabcaptcha2_version_maj, $gabcaptcha2_version_min, $gabcaptcha2_version_rev );
+		}
+	}
 
 
 
-
-
-
-
-
-	function gabcaptcha2_install ()
+	function install($vermajor, $verminor, $verrevision)
 	{
+		global $gabcaptcha2_version;
+
+
+		$majver = gabcaptcha2_get_version('major');
+		$minver = gabcaptcha2_get_version('minor');
+		$revver = gabcaptcha2_get_version('revision');
+
 		global $wpdb;
+
 		$table_name = $wpdb->prefix . "gabcaptchasecret";
 
 		if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") != $table_name)
@@ -189,6 +301,40 @@ class GabCaptcha2
 
 			$rows_affected = $wpdb->insert( $table_name, array( 'secret' => "TABLE CREATED ON DATE : " . current_time('mysql') ) );
 		}
+
+		if( $majver == 1 )
+		{
+			if ( $minver == 0 )
+			{
+				if ( $revver < 12 )
+				{
+					//set the new options array
+					$gabcaptcha2_options['display_credits']         = get_option( 'gc_show_credit' );
+					$gabcaptcha2_options['automatically_approve']   = ( get_option( 'gc_automatically_approve' ) == 'yes' ? 'on' : 'off' );
+					$gabcaptcha2_options['captcha_label']           = get_option( 'gc_captcha_text' );
+					$gabcaptcha2_options['captcha_length']          = get_option( 'gc_captcha_length' );
+					$gabcaptcha2_options['captcha_solution_length'] = get_option( 'gc_captcha_to_pick' );
+					$gabcaptcha2_options['output_method']           = get_option( 'gc_method' );
+
+					//add the new options array
+					add_option( 'gabcaptcha2_options', $gabcaptcha2_options );
+					add_option( 'gabcaptcha2_version', $gabcaptcha2_version );
+
+					//delete the old options
+					delete_option( 'gc_show_credit' );
+					delete_option( 'gc_automatically_approve' );
+					delete_option( 'gc_captcha_text' );
+					delete_option( 'gc_captcha_length' );
+					delete_option( 'gc_captcha_to_pick' );
+					delete_option( 'gc_method' );
+
+					//delete options found to be unused
+					delete_option( 'gc_css_only' );
+					delete_option( 'gc_lang' );
+				}
+			}
+		}
+
 	} //function
 
 
@@ -328,13 +474,7 @@ class GabCaptcha2
 
 
 
-
-
-
-
-
-
-
+/*
 
 	function gabcaptcha2_options_page() {
 
@@ -364,7 +504,9 @@ class GabCaptcha2
 				update_option('gc_method', $_POST['gc_method']);
 			}
 
-			update_option('gc_show_credit', escapestringjs($_POST['gc_show_credit']));
+			//update_option('gc_show_credit', escapestringjs($_POST['gc_show_credit']));
+			gabcaptcha2_set_option( 'display_credits', escapestringjs( $_POST['gc_show_credit'] ) );
+
 			update_option('gc_captcha_text', escapestringjs($_POST['gc_captcha_text']));
 
 			echo '<div class="updated"><p>' . __("Settings was successfully updated!", 'gabcaptcha2') . '</p></div>';
@@ -378,7 +520,9 @@ class GabCaptcha2
 			<fieldset class="options">
 				<legend style="font-weight: bold;">Options</legend>
 				<?php
-				$gc_show_credit = get_option('gc_show_credit');
+				//$gc_show_credit = get_option('gc_show_credit');
+				$gc_show_credit = gabcaptcha2_get_option( 'display_credits' );
+
 				//$gc_lang = get_option('gc_lang');
 				$gc_captcha_text = htmlspecialchars(stripslashes(get_option('gc_captcha_text')), ENT_QUOTES);
 				$gc_captcha_length = get_option('gc_captcha_length');
@@ -444,15 +588,17 @@ class GabCaptcha2
 	<?php
 	} //function
 
-	function gabcaptcha2_add_menu()
+	*/
+
+	/*public function gabcaptcha2_add_menu_callback()
 	{
 		add_options_page('Gab Captcha 2', 'Gab Captcha 2', 'activate_plugins', __FILE__, Array( &$this, 'gabcaptcha2_options_page' ) );
-	} //function
+	}*/ //function
 
 	/*
 	 * Add CSS into the head
 	 */
-	function gabcaptcha2_add_stylesheet()
+	public function gabcaptcha2_add_stylesheet_callback()
 	{
 		global $gabcaptcha2_plugin_dir;
 		global $gabcaptcha2_plugin_url;
@@ -468,7 +614,8 @@ class GabCaptcha2
 			printf( __("%s does not exist", 'gabcaptcha2'), $gabcaptcha2_style_file);
 		}
 
-		$gc_method = get_option('gc_method');
+		//$gc_method = get_option('gc_method');
+		$gc_method = gabcaptcha2_get_option( 'output_method' );
 		if ($gc_method == 'css')
 		{
 			$gabcaptcha2_style_url = $gabcaptcha2_plugin_url . '/emphasis.php?set=' . $this->keylist64;
@@ -509,8 +656,8 @@ class GabCaptcha2
 
 
 
-
-	function gabcaptcha2_check()
+	//check if a valid solution was given
+	function gabcaptcha2_check_valid()
 	{
 		global $wpdb;
 
@@ -586,7 +733,7 @@ class GabCaptcha2
 	function gabcaptcha2_preprocess_comment( $commentdata )
 	{
 		//check if a valid solution was given
-		$this->gabcaptcha2_check();
+		$this->gabcaptcha2_check_valid();
 
 		if ($_SESSION['gabcaptcha2_comment_status'] == "passed")
 		{
@@ -613,7 +760,7 @@ class GabCaptcha2
 
 
 
-	function gabcaptcha2_insert_comment( $id, $comment )
+	public function gabcaptcha2_insert_comment_callback( $id, $comment )
 	{
 		global $user_ID;
 		global $gabcaptcha2_plugin_dir;
@@ -623,7 +770,7 @@ class GabCaptcha2
 			return $id;
 		}
 
-		//$this->gabcaptcha2_check();
+		//$this->gabcaptcha2_check_valid();
 
 		if ($_SESSION['gabcaptcha2_comment_status'] == "failed")
 		{
@@ -643,7 +790,8 @@ class GabCaptcha2
 		}
 		else
 		{
-			if (get_option('gc_automatically_approve') == 'yes')
+			//if (get_option('gc_automatically_approve') == 'yes')
+			if (gabcaptcha2_get_option('automatically_approve') == 'on')
 			{
 				wp_set_comment_status( $id, "approve" );
 			}
@@ -655,7 +803,7 @@ class GabCaptcha2
 
 
 
-	function gabcaptcha2_comment_form($id)
+	public function gabcaptcha2_comment_form_callback($id)
 	{
 		global $user_ID;
 		global $gabcaptcha2_plugin_dir;
@@ -668,7 +816,8 @@ class GabCaptcha2
 
 		//$_SESSION['gabcaptcha2_comment_status'] = "normal";
 
-		$gc_method = get_option('gc_method');
+		//$gc_method = get_option('gc_method');
+		$gc_method = gabcaptcha2_get_option( 'output_method' );
 		if ($gc_method == 'css')
 		{
 			$gc_final_output = $this->gabcaptchaoutput2;
@@ -700,8 +849,10 @@ class GabCaptcha2
 			unlink($failedfile);
 		}
 
-		$show_credit = get_option('gc_show_credit');
-		$gc_captcha_text = get_option('gc_captcha_text');
+		//$show_credit = get_option('gc_show_credit');
+		$show_credit = gabcaptcha2_get_option( 'display_credits' );
+		//$gc_captcha_text = get_option('gc_captcha_text');
+		$gc_captcha_text = gabcaptcha2_get_option( 'captcha_label' );
 		?>
 
 		<fieldset id="<?php echo $_SESSION['gabcaptcha2_id'];?>" class="gabcaptchafs"></fieldset>
@@ -762,19 +913,19 @@ class GabCaptcha2
 
 		var submitp = commentField.parentNode;
 		var answerDiv = document.getElementById("<?php echo $_SESSION['gabcaptcha2_id']; ?>");
-		answerDiv.innerHTML = '<legend><?php echo escapestringjs( __("Anti-spam protection", 'gabcaptcha2') ); ?></legend>'
+		answerDiv.innerHTML = '<legend><?php echo gabcaptcha2_escapestringjs( __("Anti-spam protection", 'gabcaptcha2') ); ?></legend>'
 		+ '<!-- Turing test using Gab Captcha 2 v<?php echo $gabcaptcha2_version; ?> (http://www.gabsoftware.com/products/scripts/gabcaptcha2/) -->'
-		+ '<p><?php echo escapestringjs($gc_captcha_text); ?></p>'
+		+ '<p><?php echo gabcaptcha2_escapestringjs($gc_captcha_text); ?></p>'
 		+ '<label for="commentturing"><?php echo $gc_final_output; ?></label>'
 		+ '<input type="text" id="commentturing" name="CommentTuring" maxlength="4" class="textField" /><br />'
 		+ '<input type="hidden" id="commentsecret" name="CommentSecret" value="<?php echo base64_encode(md5($this->validanswer)) ?>" />'
 		+ '<?php if ($failedprevious && $failedcommentdata != "" ): ?>'
-		+ '<p class="gabcaptchaer"><?php echo escapestringjs(__("You failed the test. Try again!", 'gabcaptcha2')); ?></p>'
+		+ '<p class="gabcaptchaer"><?php echo gabcaptcha2_escapestringjs(__("You failed the test. Try again!", 'gabcaptcha2')); ?></p>'
 		+ '<?php endif; ?>'
 		+ '<?php if($show_credit == 1):?><br />'
-		+ '<a class="gabcaptchalc" title="<?php echo escapestringjs(sprintf(__("Gab Captcha 2 v%s", 'gabcaptcha2'), $gabcaptcha2_version)); ?>" href="<?php _e("http://www.gabsoftware.com/products/scripts/gabcaptcha2/", 'gabcaptcha2'); ?>"><?php echo escapestringjs(__("Gab Captcha 2 &copy; GabSoftware", 'gabcaptcha2')); ?></a>'
+		+ '<a class="gabcaptchalc" title="<?php echo gabcaptcha2_escapestringjs(sprintf(__("Gab Captcha 2 v%s", 'gabcaptcha2'), $gabcaptcha2_version)); ?>" href="<?php _e("http://www.gabsoftware.com/products/scripts/gabcaptcha2/", 'gabcaptcha2'); ?>"><?php echo gabcaptcha2_escapestringjs(__("Gab Captcha 2 &copy; GabSoftware", 'gabcaptcha2')); ?></a>'
 		+ '<?php elseif ($show_credit == 2):?><br />'
-		+ '<span class="gabcaptchalc" title="<?php echo escapestringjs(sprintf(__("Gab Captcha 2 v%s", 'gabcaptcha2'), $gabcaptcha2_version)); ?>"><?php echo escapestringjs(__("Protected by <strong>Gab Captcha 2</strong>")); ?></span>'
+		+ '<span class="gabcaptchalc" title="<?php echo gabcaptcha2_escapestringjs(sprintf(__("Gab Captcha 2 v%s", 'gabcaptcha2'), $gabcaptcha2_version)); ?>"><?php echo gabcaptcha2_escapestringjs(__("Protected by <strong>Gab Captcha 2</strong>")); ?></span>'
 		+ '<?php endif;?>';
 		submitp.appendChild(answerDiv, commentField);
 		<?php
@@ -789,7 +940,7 @@ ECHO <<<END
 	}
 
 END;
-			echo "	commentArea.innerHTML = '" . escapestringjs($failedcommentdata) . "';\n";
+			echo "	commentArea.innerHTML = '" . gabcaptcha2_escapestringjs($failedcommentdata) . "';\n";
 			echo "	window.location.hash = '#" . $_SESSION['gabcaptcha2_id'] . "';\n";
 		}
 		?>
