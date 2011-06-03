@@ -6,7 +6,7 @@ Description: Efficient and simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
 Version: 1.0.12
 Author URI: http://www.gabsoftware.com
-Tags: comments, spam, captcha, turing, test
+Tags: comments, spam, captcha, turing, test, challenge
 */
 
 
