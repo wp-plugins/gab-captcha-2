@@ -29,11 +29,6 @@ class GabCaptcha2_Options
 
 		add_action( 'admin_menu', array( &$this, 'add_pages_callback' ) );
 		add_action( 'admin_init', array( &$this, 'register_settings_callback' ) );
-
-		/*if ( get_option( 'gabcaptcha2_options' ) === FALSE )
-		{
-			$this->initialize_settings();
-		}*/
 	}
 
 	/* Add page(s) to the admin menu */
