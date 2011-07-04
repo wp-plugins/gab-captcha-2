@@ -3,8 +3,8 @@ Contributors: GabSoftware
 Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
-Tested up to: 3.1.3
-Stable tag: 1.0.13
+Tested up to: 3.1.4
+Stable tag: 1.0.14
 
 Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
 
@@ -19,7 +19,7 @@ It adds an easy turing test before each comment form. The turing test consist in
 </p>
 
 <p>
-Gab Captcha 2 currently comes in two languages: English (default) and French. You are welcome to propose your own translation or to update existing ones, especially the English one as I am not a native English speaker.
+Gab Captcha 2 currently comes in three languages: English (default), Russian and French. You are welcome to propose your own translation or to update existing ones, especially the English one as I am not a native English speaker.
 </p>
 
 <p>
@@ -93,10 +93,10 @@ Yes. Go to the 'Settings > Gab Captcha 2' menu in your Wordpress administration 
 = Why Gab Captcha 2 is not translated in my language? =
 
 Most probably because nobody submitted a translation for your language yet. But you can help:
-1. Copy and paste the file "lang/default.po" and rename it to "lang/gabcaptcha2-code" where "code" is your language code (eg, it is "fr" for French)
-2. Use Poedit or any other tool able to handle .po and .mo files
+1. Go to read <a href="http://www.gabsoftware.com/tips/a-guide-for-wordpress-plugins-translators-gettext-poedit-locale/">this article<a>
+2. The POT file is located in the "lang" sub-directory of Gab Captcha 2
 3. Then send me your translated file.
-Note: do not edit .po files by hand. Use an appropriate tool.
+Note: do not edit .po files by hand. Use an appropriate tool such as Poedit and send me both the resulting .po and .mo files.
 
 == Screenshots ==
 
@@ -104,6 +104,14 @@ Note: do not edit .po files by hand. Use an appropriate tool.
 2. Gab Captcha 2 before the comment text area
 
 == Changelog ==
+
+= 1.0.14 =
+* Fixed the checkbox that was not saved in the options (thanks to Hans!)
+* No longer use a file to get back the comment after failure
+* Better escaping thanks to esc_js()
+* Code cleaning
+* Moved the code outside the main class inside the class
+* Corrected the visibility of some main class functions
 
 = 1.0.13 =
 * This is a maintenance release
