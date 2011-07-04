@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: gabcaptcha2 1.0.12\n"
+"Project-Id-Version: gabcaptcha2 1.0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-20 21:02+0800\n"
+"POT-Creation-Date: 2011-07-05 02:11+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Gabriel Hautclocq <gabriel@gabsoftware.com>\n"
 "Language-Team: Станислав <Станислав>\n"
@@ -17,135 +17,181 @@ msgstr ""
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: gabcaptcha2.php:148
-#: gabcaptcha2.php:397
-msgid "Prove that you are Human by typing the emphasized characters:"
-msgstr "Введите красные буквы:"
+#: gabcaptcha2_admin.php:26
+msgid "General options"
+msgstr ""
 
-#: gabcaptcha2.php:367
-msgid "Settings was successfully updated!"
-msgstr "Настройки обновлены!"
-
-#: gabcaptcha2.php:371
-msgid "Gab Captcha 2 settings"
-msgstr "Настройки Gab Captcha 2"
-
-#: gabcaptcha2.php:372
-msgid "Now you can laugh at the bots!"
-msgstr "Теперь вы можете насмехаться над роботами!"
-
-#: gabcaptcha2.php:387
-msgid "Display credits:"
-msgstr "Показать информацию об авторе:"
-
-#: gabcaptcha2.php:389
-msgid "As link"
-msgstr "Как ссылка"
-
-#: gabcaptcha2.php:390
-msgid "As plain text"
-msgstr "Как обычный текст"
-
-#: gabcaptcha2.php:391
-msgid "Off"
-msgstr "Выключено"
-
-#: gabcaptcha2.php:396
-msgid "Captcha label"
-msgstr "Заголовок капчи"
-
-#: gabcaptcha2.php:401
+#: gabcaptcha2_admin.php:27
 msgid "Captcha options"
 msgstr "Настройки капчи"
 
-#: gabcaptcha2.php:403
-#: gabcaptcha2.php:404
-msgid "Captcha length (2 to 64):"
-msgstr "Длина капчи  (от 2 до 64):"
+#: gabcaptcha2_admin.php:28
+msgid "Security"
+msgstr ""
 
-#: gabcaptcha2.php:406
-#: gabcaptcha2.php:407
-msgid "Solution length (1 to 24):"
-msgstr "Длина ответа (от 1 до 24):"
+#: gabcaptcha2_admin.php:37
+msgid "Gab Captcha 2"
+msgstr "Gab Captcha 2"
 
-#: gabcaptcha2.php:410
-msgid "Automatically approve comments who passed the test:"
-msgstr "Автоматически публиковать комментарии прошедшие тест:"
+#: gabcaptcha2_admin.php:46
+msgid "Gab Captcha 2 Options"
+msgstr ""
 
-#: gabcaptcha2.php:412
-msgid "Yes"
-msgstr "Да"
+#: gabcaptcha2_admin.php:52
+msgid "Save Changes"
+msgstr ""
 
-#: gabcaptcha2.php:413
-msgid "No"
-msgstr "Нет"
+#: gabcaptcha2_admin.php:56
+msgid "Translated by <a href=\"http://www.gabsoftware.com/\">Gabriel Hautclocq</a>"
+msgstr ""
 
-#: gabcaptcha2.php:418
-msgid "Choose the method to generate the Captcha:"
-msgstr "Выберите метод генерации капчи:"
+#: gabcaptcha2_admin.php:65
+msgid "Default Field"
+msgstr ""
 
-#: gabcaptcha2.php:420
+#: gabcaptcha2_admin.php:66
+msgid "This is a default description."
+msgstr ""
+
+#: gabcaptcha2_admin.php:113
+msgid "Display credits:"
+msgstr "Показать информацию об авторе:"
+
+#: gabcaptcha2_admin.php:114
+msgid "Credits will be displayed on the bottom of the Captcha section."
+msgstr ""
+
+#: gabcaptcha2_admin.php:119
+msgid "As link"
+msgstr "Как ссылка"
+
+#: gabcaptcha2_admin.php:120
+msgid "As text"
+msgstr ""
+
+#: gabcaptcha2_admin.php:121
+msgid "Off"
+msgstr "Выключено"
+
+#: gabcaptcha2_admin.php:127
+msgid "Automatically approve comments who passed the test"
+msgstr ""
+
+#: gabcaptcha2_admin.php:128
+msgid "If checked, your comment will be immediately approved and spam comments will be automatically placed in the trash."
+msgstr ""
+
+#: gabcaptcha2_admin.php:140
+msgid "Captcha label:"
+msgstr ""
+
+#: gabcaptcha2_admin.php:141
+msgid "This label will be shown to the unregistered visitors"
+msgstr ""
+
+#: gabcaptcha2_admin.php:142
+msgid "Prove that you are Human by typing the emphasized characters:"
+msgstr "Введите красные буквы:"
+
+#: gabcaptcha2_admin.php:150
+msgid "Captcha length:"
+msgstr "Длина капчи:"
+
+#: gabcaptcha2_admin.php:151
+msgid "How many characters are displayed in the captcha (2 to 64). 24 should be enough."
+msgstr ""
+
+#: gabcaptcha2_admin.php:159
+msgid "Solution length:"
+msgstr "Длина ответа:"
+
+#: gabcaptcha2_admin.php:160
+msgid "How many characters the users will have to write (1 to 24). Must be less than the captcha length set previously. Do not set to a too high value!"
+msgstr ""
+
+#: gabcaptcha2_admin.php:172
+msgid "Method to output the Captcha:"
+msgstr ""
+
+#: gabcaptcha2_admin.php:173
+msgid "This is a compromise between better compatibility and better security."
+msgstr ""
+
+#: gabcaptcha2_admin.php:178
 msgid "Standard: medium security, high compatibility"
 msgstr "Стандартный: Средняя защита, но работает везде"
 
-#: gabcaptcha2.php:421
+#: gabcaptcha2_admin.php:179
 msgid "CSS: improved security, compatible with CSS-capable browsers"
 msgstr "CSS: улучшеная защита, работает в 99% браузеров"
 
-#: gabcaptcha2.php:422
+#: gabcaptcha2_admin.php:180
 msgid "CSS 3: better security, but reduces compatibility to CSS3-compliant browsers"
 msgstr "CSS 3: мощнейшая защита, работает только в современных бораузерах"
 
-#: gabcaptcha2.php:426
-msgid "Standard"
-msgstr "Стандартный"
+#: gabcaptcha2_admin.php:195
+msgid "This section concerns the general options of Gab Captcha 2."
+msgstr ""
 
-#: gabcaptcha2.php:434
-msgid "Apply"
-msgstr "Принять"
+#: gabcaptcha2_admin.php:201
+msgid "This section proposes settings related to the captcha."
+msgstr ""
 
-#: gabcaptcha2.php:439
-msgid "http://www.gabsoftware.com/"
-msgstr "http://www.gabsoftware.com/"
+#: gabcaptcha2_admin.php:207
+msgid "This section contains security settings."
+msgstr ""
 
-#: gabcaptcha2.php:439
-msgid "Gabriel Hautclocq"
-msgstr "Габриэл Гаутчлок"
-
-#: gabcaptcha2.php:465
-#: gabcaptcha2.php:479
+#: gabcaptcha2.php:462
+#: gabcaptcha2.php:478
 #: gabcaptcha2.php:492
 #, php-format
 msgid "%s does not exist"
 msgstr "%s не существует"
 
-#: gabcaptcha2.php:705
+#: gabcaptcha2.php:701
 msgid "Our antispam protection requires that you enable JavaScript in your browser to be able to comment!"
 msgstr "Наша защита против спама требует для работы включенный  JavaScript в вашем браузере!"
 
-#: gabcaptcha2.php:717
-msgid "Anti-spam"
+#: gabcaptcha2.php:758
+msgid "Anti-spam protection"
 msgstr "Анти-спам"
 
-#: gabcaptcha2.php:724
+#: gabcaptcha2.php:765
 msgid "You failed the test. Try again!"
 msgstr "Вы неправильно ввели красные буквы. Попробуйте снова!"
 
-#: gabcaptcha2.php:727
-#: gabcaptcha2.php:729
+#: gabcaptcha2.php:768
+#: gabcaptcha2.php:770
 #, php-format
 msgid "Gab Captcha 2 v%s"
 msgstr "Gab Captcha 2 v%s"
 
-#: gabcaptcha2.php:727
+#: gabcaptcha2.php:768
 msgid "http://www.gabsoftware.com/products/scripts/gabcaptcha2/"
 msgstr "http://www.gabsoftware.com/products/scripts/gabcaptcha2/"
 
-#: gabcaptcha2.php:727
+#: gabcaptcha2.php:768
 msgid "Gab Captcha 2 &copy; GabSoftware"
 msgstr "Gab Captcha 2 &copy; GabSoftware"
 
-#: gabcaptcha2.php:729
+#: gabcaptcha2.php:770
 msgid "Protected by <strong>Gab Captcha 2</strong>"
 msgstr "Защищено <strong>Gab Captcha 2</strong>"
+
+#~ msgid "http://www.gabsoftware.com/"
+#~ msgstr "http://www.gabsoftware.com/"
+#~ msgid "Gabriel Hautclocq"
+#~ msgstr "Габриэл Гаутчлок"
+#~ msgid "Settings was successfully updated!"
+#~ msgstr "Настройки обновлены!"
+#~ msgid "Now you can laugh at the bots!"
+#~ msgstr "Теперь вы можете насмехаться над роботами!"
+#~ msgid "Yes"
+#~ msgstr "Да"
+#~ msgid "No"
+#~ msgstr "Нет"
+#~ msgid "Standard"
+#~ msgstr "Стандартный"
+#~ msgid "Apply"
+#~ msgstr "Принять"
 
