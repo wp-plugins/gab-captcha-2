@@ -3,10 +3,10 @@ Contributors: GabSoftware
 Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
-Tested up to: 3.1.4
-Stable tag: 1.0.14
+Tested up to: 3.3.0
+Stable tag: 1.0.15
 
-Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
+Gab Captcha 2 is a simple captcha plugin for Wordpress comments.
 
 == Description ==
 
@@ -104,6 +104,14 @@ Note: do not edit .po files by hand. Use an appropriate tool such as Poedit and 
 2. Gab Captcha 2 before the comment text area
 
 == Changelog ==
+
+= 1.0.15 =
+* Performance tweaks
+* Use DOM methods to add the captcha instead of element.innerHTML: can now be used on XHTML websites served as application/xhtml+xml
+* Corrected the display bug when the credits are displayed as text
+* Code cleaning
+* Administration page improved
+* WordPress 3.3 support
 
 = 1.0.14 =
 * Fixed the checkbox that was not saved in the options (thanks to Hans!)
