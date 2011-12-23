@@ -4,9 +4,9 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.15
+Version: 1.0.16
 Author URI: http://www.gabsoftware.com
-Tags: comments, spam, captcha, turing, test, challenge
+Tags: comments, spam, bot, captcha, turing, test, challenge, protection, antispam
 */
 
 
@@ -27,7 +27,7 @@ $gabcaptcha2_plugin_url = WP_PLUGIN_URL . '/' . plugin_basename( dirname( __FILE
 
 $gabcaptcha2_version_maj = 1;
 $gabcaptcha2_version_min = 0;
-$gabcaptcha2_version_rev = 15;
+$gabcaptcha2_version_rev = 16;
 $gabcaptcha2_version = "{$gabcaptcha2_version_maj}.{$gabcaptcha2_version_min}.{$gabcaptcha2_version_rev}";
 
 
@@ -73,8 +73,6 @@ class GabCaptcha2
 			$_SESSION['gabcaptcha2_comment_status'] = 'normal';
 		}
 
-		// Place your add_actions and add_filters here
-
 		$this->letters = Array ( 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' );
 		$this->captchalength     = $this->gabcaptcha2_get_option( 'captcha_length' );
 		$this->captchatopick     = $this->gabcaptcha2_get_option( 'captcha_solution_length' );
@@ -99,11 +97,13 @@ class GabCaptcha2
 			$this->gabcaptcha2_options = new GabCaptcha2_Options();
 		}
 
+		// Place your add_actions and add_filters here
 
-		add_action( 'init',              array( &$this, 'gabcaptcha2_init_callback' ) );
-		add_action( 'wp_insert_comment', array( &$this, 'gabcaptcha2_insert_comment_callback' ), 10, 2 );
-		add_action( 'comment_form',      array( &$this, 'gabcaptcha2_comment_form_callback' ) );
-		add_action( 'preprocess_comment',   array( &$this, 'gabcaptcha2_preprocess_comment_callback' ), 10, 1 );
+		add_action( 'init',                array( &$this, 'gabcaptcha2_init_callback' ) );
+		add_action( 'wp_insert_comment',   array( &$this, 'gabcaptcha2_insert_comment_callback' ), 10, 2 );
+		add_action( 'comment_form',        array( &$this, 'gabcaptcha2_comment_form_callback' ) );
+		add_action( 'pre_comment_on_post', array( &$this, 'gabcaptcha2_pre_comment_on_post_callback' ), 10, 1 );
+		add_action( 'preprocess_comment',  array( &$this, 'gabcaptcha2_preprocess_comment_callback' ), 10, 1 );
 
 	} // function
 
@@ -301,8 +301,13 @@ class GabCaptcha2
 					delete_option( 'gc_css_only' );
 					delete_option( 'gc_lang' );
 				}
+				if( $revver < 16 )
+				{
+					$this->gabcaptcha2_set_option( 'insert_comment', 'on' );
+				}
 			}
 		}
+		update_option( 'gabcaptcha2_version', $gabcaptcha2_version );
 
 	} //function
 
@@ -509,6 +514,7 @@ class GabCaptcha2
 	public function gabcaptcha2_check_valid()
 	{
 		global $wpdb;
+		$this->failedturing == false;
 
 		if( ! empty( $_POST ) )
 		{
@@ -570,19 +576,62 @@ class GabCaptcha2
 
 	public function gabcaptcha2_preprocess_comment_callback( $commentdata )
 	{
-		//check if a valid solution was given
-		$this->gabcaptcha2_check_valid();
-
-		if( $_SESSION['gabcaptcha2_comment_status'] == 'passed' )
+		$insert_comment = $this->gabcaptcha2_get_option( 'insert_comment' );
+		if( $insert_comment === 'on' )
 		{
-			//remove the flood check if a valid solution has been provided
-			remove_filter( 'check_comment_flood', 'check_comment_flood_db' );
-			remove_filter( 'comment_flood_filter', 'wp_throttle_comment_flood' );
+			//check if a valid solution was given
+			$this->gabcaptcha2_check_valid();
+
+			if( $_SESSION['gabcaptcha2_comment_status'] == 'passed' )
+			{
+				//remove the flood check if a valid solution has been provided
+				remove_filter( 'check_comment_flood', 'check_comment_flood_db' );
+				remove_filter( 'comment_flood_filter', 'wp_throttle_comment_flood' );
+			}
 		}
 
 		return $commentdata;
 	}
 
+
+
+
+	public function gabcaptcha2_pre_comment_on_post_callback( $comment_post_ID )
+	{
+		$insert_comment = $this->gabcaptcha2_get_option( 'insert_comment' );
+		if( $insert_comment !== 'on' )
+		{
+			//check if a valid solution was given
+			$this->gabcaptcha2_check_valid();
+			if( $_SESSION['gabcaptcha2_comment_status'] == 'passed' )
+			{
+				//remove the flood check if a valid solution has been provided
+				remove_filter( 'check_comment_flood', 'check_comment_flood_db' );
+				remove_filter( 'comment_flood_filter', 'wp_throttle_comment_flood' );
+			}
+			else
+			{
+				//we save the comment
+				$_SESSION['gabcaptcha2_comment_data'] = htmlspecialchars( $_POST['comment'] );
+				
+				//we get the URL from where the user posted a comment
+				$permalink = get_permalink( $comment_post_ID );
+				
+				//we set up an automatic redirection to the previous page
+				header( 'refresh: 10; url=' . $permalink );
+				$message  = '<h1>' . __( 'Wrong code typed!', GABCAPTCHA2_TEXTDOMAIN ) . '</h1>';
+				$message .= '<p>' . sprintf( __( 'You will be re-directed in 10 seconds to <a href="%1$s">%1$s</a> (the URL you come from).', GABCAPTCHA2_TEXTDOMAIN ), $permalink ) . '</p>';
+				$message .= '<p>' . __( "If the redirection does not work, click on the link above.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
+				$message .= '<p>' . __( "If you are Human, don't worry, your comment is not lost. It will be displayed again on the next page.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
+				$message .= '<p>' . __( 'But double-check your code next time!', GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
+				$message .= '<p>' . __( "If you are a spam-bot, too bad for you.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
+				
+				//stop the script before comment is inserted into the database
+				wp_die( $message );
+			}
+		}
+		return $comment_post_ID;
+	}
 
 
 
@@ -603,17 +652,6 @@ class GabCaptcha2
 
 		if( $_SESSION['gabcaptcha2_comment_status'] == 'failed' )
 		{
-
-			//wp_set_comment_status( $id, "spam" );
-
-			/*
-			// use a file as marker for later use
-			$failedfile = $gabcaptcha2_plugin_dir . '/failed.txt';
-			$fh = fopen( $failedfile, 'a' );
-			$stringData = $_SESSION['gabcaptcha2_session'] . '-<(SEPARATOR)>-' . $_POST['comment'];
-			fwrite( $fh, $stringData );
-			fclose( $fh );
-			*/
 			$_SESSION['gabcaptcha2_comment_data'] = htmlspecialchars( $_POST['comment'] );
 
 			//delete the comment to avoid a "you already said that" message.
@@ -623,7 +661,7 @@ class GabCaptcha2
 		else
 		{
 			//if( get_option( 'gc_automatically_approve' ) == 'yes' )
-			if( $this->gabcaptcha2_get_option( 'automatically_approve' ) == 'on' )
+			if( $this->gabcaptcha2_get_option( 'automatically_approve' ) === 'on' )
 			{
 				wp_set_comment_status( $id, 'approve' );
 			}
@@ -659,26 +697,6 @@ class GabCaptcha2
 		{
 			$gc_final_output = $this->gabcaptchaoutput;
 		}
-
-		/*
-		$failedfile = $gabcaptcha2_plugin_dir . '/failed.txt';
-		$failedprevious = file_exists( $failedfile );
-		$failedcommentdata = '';
-		$gabcaptcha2_session = '';
-		if( $failedprevious )
-		{
-			$failedfiledata = explode( '-<(SEPARATOR)>-', file_get_contents( $failedfile ), 2 );
-			$gabcaptcha2_session = $failedfiledata[0];
-			$failedcommentdata   = $failedfiledata[1];
-
-			if( $gabcaptcha2_session != $_SESSION['gabcaptcha2_session'] )
-			{
-				$failedcommentdata = '';
-			}
-
-			unlink( $failedfile );
-		}
-		*/
 
 		/* get the comment data back if failed the captcha */
 		$failedprevious = isset( $_SESSION['gabcaptcha2_comment_data'] );

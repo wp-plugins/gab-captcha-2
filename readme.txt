@@ -4,18 +4,26 @@ Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
 Tested up to: 3.3.0
-Stable tag: 1.0.15
+Stable tag: 1.0.16
 
-Gab Captcha 2 is a simple captcha plugin for Wordpress comments.
+Gab Captcha 2 is a simple captcha plugin for fighting spam in WordPress comments.
 
 == Description ==
 
 <p>
-Gab Captcha 2 is an efficient and simple captcha plugin for Wordpress comments.
+Gab Captcha 2 is a simple, easy-to-solve and efficient captcha plugin for fighting spam in WordPress comments.
 </p>
 
 <p>
-It adds an easy turing test before each comment form. The turing test consist in typing the characters that appear emphasized and red in a text field. The plugin will add an entry in your Wordpress administration area to let you configure some options.
+It adds an easy Turing test before each comment form. The Turing test consists of emphasized characters (red by default) that you must type in a text field. The plugin can be configured in your administration area.
+</p>
+
+<p>
+You can choose to insert (or not insert) the comments into the database in case of test failure. Inserting comments on test failure can be useful if you want to be sure that blocked comments are really spam. On the other hand, choosing not to insert the comments on test failure can lower your database usage as writing to the database is an expensive process.
+</p>
+
+<p>
+A visitor who failed to provide a valid solution to the test will have the opportunity to try again and will not loose his comment.
 </p>
 
 <p>
@@ -105,6 +113,13 @@ Note: do not edit .po files by hand. Use an appropriate tool such as Poedit and 
 
 == Changelog ==
 
+= 1.0.16 =
+* Option to block spam before it is inserted into the database (default is: insert, like the previous version)
+* Corrected the "required" attribute of checkbox fields
+* Updated the description in readme.txt (this file)
+* Code cleaning
+* Bugs fixed
+
 = 1.0.15 =
 * Performance tweaks
 * Use DOM methods to add the captcha instead of element.innerHTML: can now be used on XHTML websites served as application/xhtml+xml
@@ -189,3 +204,10 @@ Just overwrite older files with the new ones
 
 = 1.0.1 =
 None (initial version)
+
+== Upgrade notice ==
+
+= 1.0.16 =
+
+New option in your administration menu: spam can be blocked before it is inserted into the database.
+See the change log for more information.
