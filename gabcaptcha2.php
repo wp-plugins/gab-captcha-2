@@ -4,7 +4,7 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.16
+Version: 1.0.17
 Author URI: http://www.gabsoftware.com
 Tags: comments, spam, bot, captcha, turing, test, challenge, protection, antispam
 */
@@ -27,7 +27,7 @@ $gabcaptcha2_plugin_url = WP_PLUGIN_URL . '/' . plugin_basename( dirname( __FILE
 
 $gabcaptcha2_version_maj = 1;
 $gabcaptcha2_version_min = 0;
-$gabcaptcha2_version_rev = 16;
+$gabcaptcha2_version_rev = 17;
 $gabcaptcha2_version = "{$gabcaptcha2_version_maj}.{$gabcaptcha2_version_min}.{$gabcaptcha2_version_rev}";
 
 
@@ -599,37 +599,42 @@ class GabCaptcha2
 	public function gabcaptcha2_pre_comment_on_post_callback( $comment_post_ID )
 	{
 		$insert_comment = $this->gabcaptcha2_get_option( 'insert_comment' );
-		if( $insert_comment !== 'on' )
+		if( ! is_user_logged_in() )
 		{
-			//check if a valid solution was given
-			$this->gabcaptcha2_check_valid();
-			if( $_SESSION['gabcaptcha2_comment_status'] == 'passed' )
+			if( $insert_comment !== 'on' )
 			{
-				//remove the flood check if a valid solution has been provided
-				remove_filter( 'check_comment_flood', 'check_comment_flood_db' );
-				remove_filter( 'comment_flood_filter', 'wp_throttle_comment_flood' );
+				//check if a valid solution was given
+				$this->gabcaptcha2_check_valid();
+				if( $_SESSION['gabcaptcha2_comment_status'] == 'passed' )
+				{
+					//remove the flood check if a valid solution has been provided
+					remove_filter( 'check_comment_flood', 'check_comment_flood_db' );
+					remove_filter( 'comment_flood_filter', 'wp_throttle_comment_flood' );
+				}
+				else
+				{
+					//we save the comment
+					$_SESSION['gabcaptcha2_comment_data'] = htmlspecialchars( $_POST['comment'] );
+					
+					//we get the URL from where the user posted a comment
+					$permalink = get_permalink( $comment_post_ID );
+					
+					//we set up an automatic redirection to the previous page
+					header( 'refresh: 10; url=' . $permalink );
+					$message  = '<h1>' . __( 'Wrong code typed!', GABCAPTCHA2_TEXTDOMAIN ) . '</h1>';
+					$message .= '<p>' . sprintf( __( 'You will be re-directed in 10 seconds to <a href="%1$s">%1$s</a> (the URL you come from).', GABCAPTCHA2_TEXTDOMAIN ), $permalink ) . '</p>';
+					$message .= '<p>' . __( "If the redirection does not work, click on the link above.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
+					$message .= '<p>' . __( "If you are Human, don't worry, your comment is not lost. It will be displayed again on the next page.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
+					$message .= '<p>' . __( 'But double-check your code next time!', GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
+					$message .= '<p>' . __( "If you are a spam-bot, too bad for you.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
+					
+					//stop the script before comment is inserted into the database
+					wp_die( $message );
+				}
 			}
-			else
-			{
-				//we save the comment
-				$_SESSION['gabcaptcha2_comment_data'] = htmlspecialchars( $_POST['comment'] );
-				
-				//we get the URL from where the user posted a comment
-				$permalink = get_permalink( $comment_post_ID );
-				
-				//we set up an automatic redirection to the previous page
-				header( 'refresh: 10; url=' . $permalink );
-				$message  = '<h1>' . __( 'Wrong code typed!', GABCAPTCHA2_TEXTDOMAIN ) . '</h1>';
-				$message .= '<p>' . sprintf( __( 'You will be re-directed in 10 seconds to <a href="%1$s">%1$s</a> (the URL you come from).', GABCAPTCHA2_TEXTDOMAIN ), $permalink ) . '</p>';
-				$message .= '<p>' . __( "If the redirection does not work, click on the link above.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
-				$message .= '<p>' . __( "If you are Human, don't worry, your comment is not lost. It will be displayed again on the next page.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
-				$message .= '<p>' . __( 'But double-check your code next time!', GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
-				$message .= '<p>' . __( "If you are a spam-bot, too bad for you.", GABCAPTCHA2_TEXTDOMAIN ) . '</p>';
-				
-				//stop the script before comment is inserted into the database
-				wp_die( $message );
-			}
+			//else we do not do anything for now
 		}
+		//else add the comment of the logged in user
 		return $comment_post_ID;
 	}
 

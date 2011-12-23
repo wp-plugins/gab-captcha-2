@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: gabcaptcha2 1.0.16\n"
+"Project-Id-Version: gabcaptcha2 1.0.17\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-23 22:49+0800\n"
+"POT-Creation-Date: 2011-12-24 02:13+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Gabriel Hautclocq <gabriel@gabsoftware.com>\n"
 "Language-Team: Станислав <Станислав>\n"
@@ -24,64 +24,64 @@ msgstr ""
 msgid "%s does not exist"
 msgstr "%s не существует"
 
-#: gabcaptcha2.php:622
+#: gabcaptcha2.php:624
 msgid "Wrong code typed!"
 msgstr ""
 
-#: gabcaptcha2.php:623
+#: gabcaptcha2.php:625
 #, php-format
 msgid "You will be re-directed in 10 seconds to <a href=\"%1$s\">%1$s</a> (the URL you come from)."
 msgstr ""
 
-#: gabcaptcha2.php:624
+#: gabcaptcha2.php:626
 msgid "If the redirection does not work, click on the link above."
 msgstr ""
 
-#: gabcaptcha2.php:625
+#: gabcaptcha2.php:627
 msgid "If you are Human, don't worry, your comment is not lost. It will be displayed again on the next page."
 msgstr ""
 
-#: gabcaptcha2.php:626
+#: gabcaptcha2.php:628
 msgid "But double-check your code next time!"
 msgstr ""
 
-#: gabcaptcha2.php:627
+#: gabcaptcha2.php:629
 msgid "If you are a spam-bot, too bad for you."
 msgstr ""
 
-#: gabcaptcha2.php:718
+#: gabcaptcha2.php:723
 msgid "Our anti-spam protection requires that you enable JavaScript in your browser to be able to comment!"
 msgstr "Наша защита против спама требует для работы включенный  JavaScript в вашем браузере!"
 
-#: gabcaptcha2.php:797
+#: gabcaptcha2.php:802
 msgid "Anti-spam protection"
 msgstr "Анти-спам"
 
-#: gabcaptcha2.php:849
+#: gabcaptcha2.php:854
 msgid "You failed the test. Try again!"
 msgstr "Вы неправильно ввели красные буквы. Попробуйте снова!"
 
-#: gabcaptcha2.php:865
+#: gabcaptcha2.php:870
 msgid "http://www.gabsoftware.com/products/scripts/gabcaptcha2/"
 msgstr "http://www.gabsoftware.com/products/scripts/gabcaptcha2/"
 
-#: gabcaptcha2.php:866
+#: gabcaptcha2.php:871
 #, php-format
 msgid "Click here for more information about Gab Captcha 2 v%s"
 msgstr ""
 
-#: gabcaptcha2.php:868
-#: gabcaptcha2.php:880
+#: gabcaptcha2.php:873
+#: gabcaptcha2.php:885
 msgid "Protected by "
 msgstr ""
 
-#: gabcaptcha2.php:871
-#: gabcaptcha2.php:883
+#: gabcaptcha2.php:876
+#: gabcaptcha2.php:888
 #: gabcaptcha2_admin.php:37
 msgid "Gab Captcha 2"
 msgstr "Gab Captcha 2"
 
-#: gabcaptcha2.php:879
+#: gabcaptcha2.php:884
 #, php-format
 msgid "More information about Gab Captcha 2 v%s on http://www.gabsoftware.com/"
 msgstr ""
@@ -151,7 +151,7 @@ msgid "Insert blocked comments in database"
 msgstr ""
 
 #: gabcaptcha2_admin.php:143
-msgid "If checked, a failed comment will still be inserted into the database. useful if you want to check that blocked comments are really spam comments."
+msgid "If checked, a failed comment will still be inserted into the database. Useful if you want to check that blocked comments are really spam comments."
 msgstr ""
 
 #: gabcaptcha2_admin.php:155
