@@ -1,4 +1,4 @@
-<?php header( 'Content-type: text/css' ) ?>label[for='commentturing'] span  {
+<?php header( 'Content-type: text/css' ) ?>label[for='commentturing'] span {
 	font-size: 0.6em;
 }
 <?php
@@ -21,7 +21,7 @@ if( isset( $_GET['set'] ) )
 	$keylist = explode( ',', base64_decode( strip_tags( $_GET['set'] ) ) );
 	foreach ($keylist as $value)
 	{
-		if( $value != '' )
+		if( $value !== '' )
 		{
 			if( $usecss3 )
 			{
