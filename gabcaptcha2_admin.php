@@ -69,7 +69,10 @@ class GabCaptcha2_Options
 			'section' => 'general',
 			'choices' => array(),
 			'class'   => '',
-			'size'    => ''
+			'size'    => '',
+			'min'     => '',
+			'max'     => '',
+			'required'=> ''
 		);
 
 		extract( wp_parse_args( $args, $defaults ) );
@@ -82,7 +85,10 @@ class GabCaptcha2_Options
 			'choices'   => $choices,
 			'label_for' => $id,
 			'class'     => $class,
-			'size'      => $size
+			'size'      => $size,
+			'min'       => $min,
+			'max'       => $max,
+			'required'  => $required
 		);
 
 		if ( $type == 'checkbox' )
@@ -115,6 +121,7 @@ class GabCaptcha2_Options
 			'std'     => '',
 			'type'    => 'radio',
 			'section' => 'general',
+			'required'=> 'required',
 			'choices' => array(
 				'1' => __( 'As link', 'gabcaptcha2' ),
 				'2' => __( 'As text', 'gabcaptcha2' ),
@@ -150,7 +157,10 @@ class GabCaptcha2_Options
 			'title'   => __( 'Captcha length:', 'gabcaptcha2' ),
 			'desc'    => __( 'How many characters are displayed in the captcha (2 to 64). 24 should be enough.', 'gabcaptcha2' ),
 			'std'     => 24,
-			'type'    => 'text',
+			'type'    => 'number',
+			'min'     => '2',
+			'max'     => '64',
+			'required'=> 'required',
 			'section' => 'captcha'
 		) );
 
@@ -159,7 +169,10 @@ class GabCaptcha2_Options
 			'title'   => __( 'Solution length:', 'gabcaptcha2' ),
 			'desc'    => __( 'How many characters the users will have to write (1 to 24). Must be less than the captcha length set previously. Do not set to a too high value!', 'gabcaptcha2' ),
 			'std'     => 4,
-			'type'    => 'text',
+			'type'    => 'number',
+			'min'     => '1',
+			'max'     => '24',
+			'required'=> 'required',
 			'section' => 'captcha'
 		) );
 
@@ -174,6 +187,7 @@ class GabCaptcha2_Options
 			'std'     => '',
 			'type'    => 'radio',
 			'section' => 'security',
+			'required'=> 'required',
 			'choices' => array(
 				'std' => __( 'Standard: medium security, high compatibility', 'gabcaptcha2' ),
 				'css' => __( 'CSS: improved security, compatible with CSS-capable browsers', 'gabcaptcha2' ),
@@ -317,13 +331,13 @@ class GabCaptcha2_Options
 					$checked = ' checked="checked"';
 				}
 
-				echo "<input{$field_class} type='checkbox' id='{$id}' name='gabcaptcha2_options[{$id}]' value='on'{$checked} />
+				echo "<input{$field_class} type='checkbox' id='{$id}' name='gabcaptcha2_options[{$id}]' required='{$required}' value='on'{$checked} />
 				<label for='{$id}'>{$desc}</label>";
 
 				break;
 
 			case 'select':
-				echo "<select{$field_class} name='gabcaptcha2_options[{$id}]'>";
+				echo "<select{$field_class} name='gabcaptcha2_options[{$id}]' required='{$required}'>";
 
 				foreach ( $choices as $value => $label )
 				{
@@ -354,7 +368,7 @@ class GabCaptcha2_Options
 						$checked = ' checked="checked"';
 					}
 					echo "
-					<input{$field_class} type='radio' name='gabcaptcha2_options[{$id}]' id='{$id}{$i}' value='{$value}'{$checked} />
+					<input{$field_class} type='radio' name='gabcaptcha2_options[{$id}]' id='{$id}{$i}' required='{$required}' value='{$value}'{$checked} />
 					<label for='{$id}{$i}'>{$label}</label>
 					<br />
 					";
@@ -370,7 +384,7 @@ class GabCaptcha2_Options
 
 			case 'textarea':
 				$value = ( isset( $options[$id] ) ? $options[$id] : $std );
-				echo "<textarea{$field_class} id='{$id}' name='gabcaptcha2_options[{$id}]' placeholder='{$std}'>{$value}</textarea>";
+				echo "<textarea{$field_class} id='{$id}' name='gabcaptcha2_options[{$id}]' required='{$required}' placeholder='{$std}'>{$value}</textarea>";
 
 				if ( $desc != '' )
 				{
@@ -381,7 +395,19 @@ class GabCaptcha2_Options
 
 			case 'password':
 				$value = $options[$id];
-				echo "<input{$field_class} type='password' id='{$id}' name='gabcaptcha2_options[{$id}]' value='{$value}' />";
+				echo "<input{$field_class} type='password' id='{$id}' name='gabcaptcha2_options[{$id}]' required='{$required}' value='{$value}' />";
+
+				if ( $desc != '' )
+				{
+					echo "<br /><small>{$desc}</small>";
+				}
+
+				break;
+				
+
+			case 'number':
+				$value = $options[$id];
+				echo "<input{$field_class} type='number' id='{$id}' name='gabcaptcha2_options[{$id}]' required='{$required}' min='{$min}' max='{$max}' value='{$value}' />";
 
 				if ( $desc != '' )
 				{
@@ -398,7 +424,7 @@ class GabCaptcha2_Options
 					$sizeattribute = " size='{$size}'";
 				}
 				$value = ( isset( $options[$id] ) ? $options[$id] : $std );
-				echo "<input{$field_class} type='text' id='{$id}' name='gabcaptcha2_options[{$id}]' placeholder='{$std}' value='{$value}'{$sizeattribute} />";
+				echo "<input{$field_class} type='text' id='{$id}' name='gabcaptcha2_options[{$id}]' required='{$required}' placeholder='{$std}' value='{$value}'{$sizeattribute} />";
 				if ( $desc != '' )
 				{
 					echo "<br /><small>{$desc}</small>";
