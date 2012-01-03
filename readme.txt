@@ -4,7 +4,7 @@ Donate link: http://www.gabsoftware.com/donate/
 Tags: comments, spam, captcha, turing, test
 Requires at least: 3.0.0
 Tested up to: 3.3.0
-Stable tag: 1.0.17
+Stable tag: 1.0.19
 
 Gab Captcha 2 is a simple captcha plugin for fighting spam in WordPress comments.
 
@@ -19,15 +19,19 @@ It adds an easy Turing test before each comment form. The Turing test consists o
 </p>
 
 <p>
-You can choose to insert (or not insert) the comments into the database in case of test failure. Inserting comments on test failure can be useful if you want to be sure that blocked comments are really spam. On the other hand, choosing not to insert the comments on test failure can lower your database usage as writing to the database is an expensive process.
+The captcha can be displayed using JavaScript for maximum security (recommended) but can also be displayed without using any JavaScript code. This can be configured in the the plugin settings.
 </p>
 
 <p>
-A visitor who failed to provide a valid solution to the test will have the opportunity to try again and will not loose his comment.
+You can choose to insert (or not insert) the comments into the database on failure to provide a valid solution. Inserting comments on failure can be useful if you want to be sure that blocked comments are really spam. On the other hand, choosing not to insert the comments on failure can lower your database usage as writing to the database is an expensive process.
 </p>
 
 <p>
-Gab Captcha 2 currently comes in three languages: English (default), Russian and French. You are welcome to propose your own translation or to update existing ones, especially the English one as I am not a native English speaker.
+On failure to provide a valid solution, a visitor will have the opportunity to try again and will not loose his comment.
+</p>
+
+<p>
+Gab Captcha 2 currently comes in three languages: English (default), Russian (partial) and French. You are welcome to propose your own translation or to update existing ones, especially the English one as I am not a native English speaker.
 </p>
 
 <p>
@@ -35,7 +39,7 @@ Important notes:
 </p>
 
 <ol>
-<li>This plugin requires Javascript to be able to post a comment</li>
+<li>Depending on your settings, this plugin may requires Javascript to be able to post a comment</li>
 <li>This plugin can automatically approve valid comments depending on your settings</li>
 <li>This plugin requires PHP 5</li>
 </ol>
@@ -112,6 +116,18 @@ Note: do not edit .po files by hand. Use an appropriate tool such as Poedit and 
 2. Gab Captcha 2 before the comment text area
 
 == Changelog ==
+
+= 1.0.19 =
+* Added an option for legacy themes compatibility. Legacy themes often do not use the comment_form() function that brings several actions and filters. Check this option if the captcha doesn't appear since update 1.0.15. The only action used will be "comment_form" and JavaScript will be used compulsory.
+
+= 1.0.18 =
+* Better handling of captcha insertion, should be compatible with more themes
+* JavaScript is now optional (but recommended) to use the captcha, that is configurable in the options. Default setting: use JavaScript.
+* On failure to provide a valid solution, the page is scrolled to the fieldset of the captcha
+* On failure to provide a valid solution, the captcha field is autofocused
+* On failure to provide a valid solution, the commment data is now sanitized using wp_kses_data()
+* Simplified a little JavaScript code
+* Corrected translations
 
 = 1.0.17 =
 * Logged in users can post comments again now (oops)
