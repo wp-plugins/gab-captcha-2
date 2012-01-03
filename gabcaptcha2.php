@@ -27,7 +27,7 @@ $gabcaptcha2_plugin_url = WP_PLUGIN_URL . '/' . plugin_basename( dirname( __FILE
 
 $gabcaptcha2_version_maj = 1;
 $gabcaptcha2_version_min = 0;
-$gabcaptcha2_version_rev = 18;
+$gabcaptcha2_version_rev = 19;
 $gabcaptcha2_version = "{$gabcaptcha2_version_maj}.{$gabcaptcha2_version_min}.{$gabcaptcha2_version_rev}";
 
 
