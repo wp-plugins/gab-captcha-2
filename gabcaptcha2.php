@@ -4,7 +4,7 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.18
+Version: 1.0.19
 Author URI: http://www.gabsoftware.com
 Tags: comments, spam, bot, captcha, turing, test, challenge, protection, antispam
 */
@@ -319,6 +319,10 @@ class GabCaptcha2
 				if( $revver < 18 )
 				{
 					$this->gabcaptcha2_set_option( 'use_js', 'on' );
+				}
+				if( $revver < 19 )
+				{
+					$this->gabcaptcha2_set_option( 'legacy_theme', 'off' );
 				}
 			}
 		}
@@ -856,10 +860,21 @@ class GabCaptcha2
 		$gc_captcha_text   = $this->gabcaptcha2_get_option( 'captcha_label' );
 		$gc_captcha_length = $this->gabcaptcha2_get_option( 'captcha_length' );
 		$use_js = ($this->gabcaptcha2_get_option( 'use_js' ) === 'on' );
+		$legacy_theme = ($this->gabcaptcha2_get_option( 'legacy_theme' ) === 'on' );
 
 
-		if( $use_js )
+		if( $use_js || $legacy_theme )
 		{
+			//if legacy theme, we have to output the fieldset after the comment form, then use JavaScript to replace it before the comment textarea.
+			if( $legacy_theme )
+			{
+				?>
+
+					<fieldset id="<?php echo $_SESSION['gabcaptcha2_id']; ?>" class="gabcaptchafs"></fieldset>
+
+				<?php
+			}
+
 			//adds the captcha using Javascript
 			?>
 
@@ -1003,15 +1018,43 @@ class GabCaptcha2
 				node.setAttribute( "class", "gabcaptchalc" );
 				captchatarget.appendChild( node );
 
+				<?php if( $legacy_theme ): ?>
+
+					//This is a legacy theme. We try to find the comment textarea and insert the captcha just before.
+					var commentField = gabcaptcha2_getElementByIdUniversal( 'comment' );
+					if( commentField == null )
+					{
+						//Try with the name attribute
+						var fields = document.getElementsByTagName( 'comment' );
+						if( fields.length > 0 )
+						{
+							commentField = fields[0];
+						}
+					}
+					if( commentField != null )
+					{
+						//we found the comment text area, so we insert the captcha right before it
+						var parentNode = commentField.parentNode;
+						parentNode.insertBefore( captchatarget, commentField );
+
+						<?php if( $failedprevious && $failedcommentdata != '' ): ?>
+
+							//we fill the comment text area with the comment data
+							commentField.innerHTML = '<?php echo esc_js( $failedcommentdata ); ?>';
+
+						<?php endif; ?>
+					}
+					else
+					{
+						//The comment text area wasn't found... The captcha should appear under the comment area.
+						//Not very pretty, but eh, shouldn't your theme be more up-to-date?
+					}
+
+				<?php endif; ?>
+
 			<?php endif;?>
 
 			<?php if( $failedprevious && $failedcommentdata != '' ): ?>
-
-				var commentArea = gabcaptcha2_getElementByIdUniversal( 'comment' );
-				if( commentArea == null )
-				{
-					commentArea = document.getElementsByTagName( 'comment' )[0];
-				}
 
 				window.location.hash = "#<?php echo $_SESSION['gabcaptcha2_id']; ?>";
 

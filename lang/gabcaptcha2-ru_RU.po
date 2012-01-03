@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: gabcaptcha2 1.0.18\n"
+"Project-Id-Version: gabcaptcha2 1.0.19\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-27 03:00+0800\n"
+"POT-Creation-Date: 2012-01-03 23:30+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Gabriel Hautclocq <gabriel@gabsoftware.com>\n"
 "Language-Team: Станислав <Станислав>\n"
@@ -30,10 +30,10 @@ msgid "Security"
 msgstr ""
 
 #: gabcaptcha2_admin.php:37
-#: gabcaptcha2.php:798
 #: gabcaptcha2.php:802
-#: gabcaptcha2.php:984
-#: gabcaptcha2.php:996
+#: gabcaptcha2.php:806
+#: gabcaptcha2.php:999
+#: gabcaptcha2.php:1011
 msgid "Gab Captcha 2"
 msgstr "Gab Captcha 2"
 
@@ -129,110 +129,118 @@ msgstr ""
 msgid "If checked, will use Javascript to add the captcha dynamically (recommended)"
 msgstr ""
 
-#: gabcaptcha2_admin.php:203
+#: gabcaptcha2_admin.php:199
+msgid "Legacy themes compatibility"
+msgstr ""
+
+#: gabcaptcha2_admin.php:200
+msgid "If checked, the captcha will enforce the use of JavaScript and will only use the comment_form action hook. Try to check this if the captcha does not appear."
+msgstr ""
+
+#: gabcaptcha2_admin.php:212
 msgid "Method to output the Captcha:"
 msgstr ""
 
-#: gabcaptcha2_admin.php:204
+#: gabcaptcha2_admin.php:213
 msgid "This is a compromise between better compatibility and better security."
 msgstr ""
 
-#: gabcaptcha2_admin.php:209
+#: gabcaptcha2_admin.php:218
 msgid "Standard: medium security, high compatibility"
 msgstr "Стандартный: Средняя защита, но работает везде"
 
-#: gabcaptcha2_admin.php:210
+#: gabcaptcha2_admin.php:219
 msgid "CSS: improved security, compatible with CSS-capable browsers"
 msgstr "CSS: улучшеная защита, работает в 99% браузеров"
 
-#: gabcaptcha2_admin.php:211
+#: gabcaptcha2_admin.php:220
 msgid "CSS 3: better security, but reduces compatibility to CSS3-compliant browsers"
 msgstr "CSS 3: мощнейшая защита, работает только в современных бораузерах"
 
-#: gabcaptcha2_admin.php:226
+#: gabcaptcha2_admin.php:235
 msgid "This section concerns the general options of Gab Captcha 2."
 msgstr ""
 
-#: gabcaptcha2_admin.php:232
+#: gabcaptcha2_admin.php:241
 msgid "This section proposes settings related to the captcha."
 msgstr ""
 
-#: gabcaptcha2_admin.php:238
+#: gabcaptcha2_admin.php:247
 msgid "This section contains security settings."
 msgstr ""
 
-#: gabcaptcha2.php:501
-#: gabcaptcha2.php:516
-#: gabcaptcha2.php:530
+#: gabcaptcha2.php:505
+#: gabcaptcha2.php:520
+#: gabcaptcha2.php:534
 #, php-format
 msgid "%s does not exist"
 msgstr "%s не существует"
 
-#: gabcaptcha2.php:669
+#: gabcaptcha2.php:673
 msgid "Wrong code typed!"
 msgstr ""
 
-#: gabcaptcha2.php:670
+#: gabcaptcha2.php:674
 #, php-format
 msgid "You will be re-directed in 10 seconds to <a href=\"%1$s\">%1$s</a> (the URL you come from)."
 msgstr ""
 
-#: gabcaptcha2.php:671
+#: gabcaptcha2.php:675
 msgid "If the redirection does not work, click on the link above."
 msgstr ""
 
-#: gabcaptcha2.php:672
+#: gabcaptcha2.php:676
 msgid "If you are Human, don't worry, your comment is not lost. It will be displayed again on the next page."
 msgstr ""
 
-#: gabcaptcha2.php:673
+#: gabcaptcha2.php:677
 msgid "But double-check your code next time!"
 msgstr ""
 
-#: gabcaptcha2.php:674
+#: gabcaptcha2.php:678
 msgid "If you are a spam-bot, too bad for you."
 msgstr ""
 
-#: gabcaptcha2.php:778
-#: gabcaptcha2.php:906
+#: gabcaptcha2.php:782
+#: gabcaptcha2.php:921
 msgid "Anti-spam protection"
 msgstr "Анти-спам"
 
-#: gabcaptcha2.php:779
+#: gabcaptcha2.php:783
 #, php-format
 msgid "Turing test using Gab Captcha 2 v%s (http://www.gabsoftware.com/products/scripts/gabcaptcha2/)"
 msgstr ""
 
-#: gabcaptcha2.php:788
-#: gabcaptcha2.php:962
+#: gabcaptcha2.php:792
+#: gabcaptcha2.php:977
 msgid "You failed the test. Try again!"
 msgstr "Вы неправильно ввели красные буквы. Попробуйте снова!"
 
-#: gabcaptcha2.php:798
-#: gabcaptcha2.php:978
+#: gabcaptcha2.php:802
+#: gabcaptcha2.php:993
 msgid "http://www.gabsoftware.com/products/scripts/gabcaptcha2/"
 msgstr "http://www.gabsoftware.com/products/scripts/gabcaptcha2/"
 
-#: gabcaptcha2.php:798
-#: gabcaptcha2.php:979
+#: gabcaptcha2.php:802
+#: gabcaptcha2.php:994
 #, php-format
 msgid "Click here for more information about Gab Captcha 2 v%s"
 msgstr ""
 
-#: gabcaptcha2.php:798
 #: gabcaptcha2.php:802
-#: gabcaptcha2.php:981
-#: gabcaptcha2.php:993
+#: gabcaptcha2.php:806
+#: gabcaptcha2.php:996
+#: gabcaptcha2.php:1008
 msgid "Protected by "
 msgstr ""
 
-#: gabcaptcha2.php:802
-#: gabcaptcha2.php:992
+#: gabcaptcha2.php:806
+#: gabcaptcha2.php:1007
 #, php-format
 msgid "More information about Gab Captcha 2 v%s on http://www.gabsoftware.com/"
 msgstr ""
 
-#: gabcaptcha2.php:866
+#: gabcaptcha2.php:881
 msgid "Our anti-spam protection requires that you enable JavaScript in your browser to be able to comment!"
 msgstr "Наша защита против спама требует для работы включенный  JavaScript в вашем браузере!"
 

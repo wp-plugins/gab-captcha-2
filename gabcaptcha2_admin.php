@@ -194,6 +194,15 @@ class GabCaptcha2_Options
 			'section' => 'captcha'
 		) );
 
+		$this->create_setting( array(
+			'id'      => 'legacy_theme',
+			'title'   => __( 'Legacy themes compatibility', 'gabcaptcha2' ),
+			'desc'    => __( 'If checked, the captcha will enforce the use of JavaScript and will only use the comment_form action hook. Try to check this if the captcha does not appear.', 'gabcaptcha2' ),
+			'std'     => 'off',
+			'type'    => 'checkbox',
+			'section' => 'captcha'
+		) );
+
 
 		/* Security options
 		===========================================*/
@@ -320,6 +329,15 @@ class GabCaptcha2_Options
 			if( ! preg_match( '/^(on|off)$/i', $newinput['use_js'] ) )
 			{
 				$newinput['use_js'] = 'off';
+			}
+		}
+
+		if( isset( $input['legacy_theme'] ) )
+		{
+			$newinput['legacy_theme'] = $input['legacy_theme'];
+			if( ! preg_match( '/^(on|off)$/i', $newinput['legacy_theme'] ) )
+			{
+				$newinput['legacy_theme'] = 'off';
 			}
 		}
 
