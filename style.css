@@ -1,6 +1,7 @@
 .gabcaptchafs {
 	border: 1px solid #999;
 	margin-top: 10px;
+	margin-bottom: 20px;
 	padding: 5px;
 	text-align: left;
 }

@@ -136,7 +136,7 @@ class GabCaptcha2_Options
 			'type'    => 'checkbox',
 			'section' => 'general'
 		) );
-		
+
 		$this->create_setting( array(
 			'id'      => 'insert_comment',
 			'title'   => __( 'Insert blocked comments in database', 'gabcaptcha2' ),
@@ -182,6 +182,24 @@ class GabCaptcha2_Options
 			'min'     => '1',
 			'max'     => '24',
 			'required'=> 'required',
+			'section' => 'captcha'
+		) );
+
+		$this->create_setting( array(
+			'id'      => 'use_js',
+			'title'   => __( 'Use Javascript to display the captcha', 'gabcaptcha2' ),
+			'desc'    => __( 'If checked, will use Javascript to add the captcha dynamically (recommended)', 'gabcaptcha2' ),
+			'std'     => 'on',
+			'type'    => 'checkbox',
+			'section' => 'captcha'
+		) );
+
+		$this->create_setting( array(
+			'id'      => 'legacy_theme',
+			'title'   => __( 'Legacy themes compatibility', 'gabcaptcha2' ),
+			'desc'    => __( 'If checked, the captcha will enforce the use of JavaScript and will only use the comment_form action hook. Try to check this if the captcha does not appear.', 'gabcaptcha2' ),
+			'std'     => 'off',
+			'type'    => 'checkbox',
 			'section' => 'captcha'
 		) );
 
@@ -260,7 +278,7 @@ class GabCaptcha2_Options
 				$newinput['automatically_approve'] = 'off';
 			}
 		}
-		
+
 		if( isset( $input['insert_comment'] ) )
 		{
 			$newinput['insert_comment'] = $input['insert_comment'];
@@ -302,6 +320,24 @@ class GabCaptcha2_Options
 			if( $newinput['captcha_solution_length'] > 24 )
 			{
 				$newinput['captcha_solution_length'] = 24;
+			}
+		}
+
+		if( isset( $input['use_js'] ) )
+		{
+			$newinput['use_js'] = $input['use_js'];
+			if( ! preg_match( '/^(on|off)$/i', $newinput['use_js'] ) )
+			{
+				$newinput['use_js'] = 'off';
+			}
+		}
+
+		if( isset( $input['legacy_theme'] ) )
+		{
+			$newinput['legacy_theme'] = $input['legacy_theme'];
+			if( ! preg_match( '/^(on|off)$/i', $newinput['legacy_theme'] ) )
+			{
+				$newinput['legacy_theme'] = 'off';
 			}
 		}
 
@@ -420,7 +456,7 @@ class GabCaptcha2_Options
 				}
 
 				break;
-				
+
 
 			case 'number':
 				$value = $options[$id];
