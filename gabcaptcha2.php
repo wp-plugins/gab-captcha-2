@@ -4,7 +4,7 @@ Plugin Name: Gab Captcha 2
 Plugin URI: http://www.gabsoftware.com/products/scripts/gabcaptcha2/
 Description: Simple captcha plugin for Wordpress comments.
 Author: Gabriel Hautclocq
-Version: 1.0.19
+Version: 1.0.20
 Author URI: http://www.gabsoftware.com
 Tags: comments, spam, bot, captcha, turing, test, challenge, protection, antispam
 */
@@ -27,7 +27,7 @@ $gabcaptcha2_plugin_url = WP_PLUGIN_URL . '/' . plugin_basename( dirname( __FILE
 
 $gabcaptcha2_version_maj = 1;
 $gabcaptcha2_version_min = 0;
-$gabcaptcha2_version_rev = 19;
+$gabcaptcha2_version_rev = 20;
 $gabcaptcha2_version = "{$gabcaptcha2_version_maj}.{$gabcaptcha2_version_min}.{$gabcaptcha2_version_rev}";
 
 
@@ -65,7 +65,10 @@ class GabCaptcha2
 		/*
 		 *  Start session
 		 */
-		session_start();
+		if( ! isset( $_SESSION ) )
+		{
+			session_start();
+		}
 		if( ! isset( $_SESSION['gabcaptcha2_id'] ) || ! isset( $_SESSION['gabcaptcha2_session'] ) )
 		{
 			$_SESSION['gabcaptcha2_id']      = $this->gabcaptcha2_str_rand();
@@ -914,6 +917,61 @@ class GabCaptcha2
 				return xmlDoc;
 			}
 
+
+			// IE HACK: Define _importNode for IE since it doesnt support importNode
+			if( ! document.importNode )
+			{
+				document._importNode = function( oNode, bImportChildren )
+				{
+					var oNew;
+					if( oNode.nodeType == 1 )
+					{
+						oNew = document.createElement( oNode.nodeName );
+						for( var i = 0; i < oNode.attributes.length; i++ )
+						{
+							if( oNode.attributes[i].nodeValue != null && oNode.attributes[i].nodeValue != '' )
+							{
+								var attrName = oNode.attributes[i].name;
+								if( attrName == "class" )
+								{
+									oNew.setAttribute( "className", oNode.attributes[i].value );
+								}
+								//else
+								//{
+									oNew.setAttribute( attrName, oNode.attributes[i].value );
+								//}
+							}
+						}
+						if( oNode.style != null && oNode.style.cssText != null )
+						{
+							oNew.style.cssText = oNode.style.cssText;
+						}
+					}
+					else if( oNode.nodeType == 3 )
+					{
+						oNew = document.createTextNode( oNode.nodeValue );
+					}
+					else if( oNode.nodeType == 8 )
+					{
+						oNew = document.createComment( oNode.nodeValue );
+					}
+					else
+					{
+						oNew = document.createTextNode(''); // Skip anything else and prepare to return an empty text node
+					}
+					if( bImportChildren && oNode.hasChildNodes() )
+					{
+						for( var oChild = oNode.firstChild; oChild; oChild = oChild.nextSibling )
+						{
+							oNew.appendChild( document._importNode( oChild, true ) );
+						}
+					}
+					return oNew;
+				}
+			}
+			// IE HACK (end)
+
+
 			var captchatarget = gabcaptcha2_getElementByIdUniversal( '<?php echo $_SESSION['gabcaptcha2_id']; ?>' );
 
 			//legend
@@ -937,9 +995,23 @@ class GabCaptcha2
 			node.setAttribute( "for", "commentturing" );
 			var xml = loadXMLString( '<root xmlns="http://www.w3.org/1999/xhtml"><?php echo $gc_final_output; ?></root>' );
 			var nodes = xml.documentElement.childNodes;
-			for( i = 0, n = nodes.length; i < n; i++ )
+			var external_node = null;
+			var local_node = null;
+			for( var i = 0, n = nodes.length; i < n; i++ )
 			{
-				node.appendChild( nodes[i].cloneNode( true ) );
+				/* import the node from the xml document */
+				external_node = nodes[i].cloneNode( true );
+				if( document.importNode )
+				{
+					local_node = document.importNode( external_node, true);
+					node.appendChild( local_node );
+				}
+				else
+				{
+					local_node = document._importNode( external_node, true);
+					node.appendChild( local_node );
+					node.innerHTML = node.innerHTML;
+				}
 			}
 			captchatarget.appendChild( node );
 
