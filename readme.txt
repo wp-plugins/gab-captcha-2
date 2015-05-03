@@ -105,7 +105,7 @@ Yes. Go to the 'Settings > Gab Captcha 2' menu in your Wordpress administration 
 = Why Gab Captcha 2 is not translated in my language? =
 
 Most probably because nobody submitted a translation for your language yet. But you can help:
-1. Go to read <a href="http://www.gabsoftware.com/tips/a-guide-for-wordpress-plugins-translators-gettext-poedit-locale/">this article<a>
+1. Go to read http://www.gabsoftware.com/tips/a-guide-for-wordpress-plugins-translators-gettext-poedit-locale
 2. The POT file is located in the "lang" sub-directory of Gab Captcha 2
 3. Then send me your translated file.
 Note: do not edit .po files by hand. Use an appropriate tool such as Poedit and send me both the resulting .po and .mo files.
